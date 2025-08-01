@@ -2,6 +2,11 @@ import pdfplumber
 import re
 from typing import List
 import sys
+import os
+import csv
+
+from src.server.domain.Entry import Entry
+from src.server.domain.EntryRawText import EntryRawText
 
 # Table
 ## Header
@@ -20,18 +25,6 @@ SIGNATURE_BLOCK_REGEX = re.compile(r"Sparkasse.*?Vorstand:")
 ## Kontostand info at the end of table "Kontostand am 31.07.2025 um 20:04 Uhr"
 FINAL_BALANCE_REGEX = re.compile(r"Kontostand am .*")
 
-class EntryRawText:
-	def __init__(self, header, subject):
-		self.header = header
-		self.subject = subject
-
-class Entry:
-	def __init__(self, date: str, kind: str, amount: str, subject: str, creditor_id: str = None):
-		self.date = date
-		self.kind = kind
-		self.amount = amount
-		self.subject = subject
-		self.creditor_id = creditor_id
 
 def entryRawText_to_entry(raw_entry: EntryRawText) -> Entry:
 	header_match = ENTRY_REGEX.match(raw_entry.header)
@@ -81,21 +74,32 @@ def read_sparkasse_kontoauszug(pdf_path):
 			pages_text.append(page.extract_text())
 	return pages_text
 
+def find_pdf_files(directory: str) -> List[str]:
+	pdf_files = []
+	for root, _, files in os.walk(directory):
+		for file in files:
+			if file.lower().endswith('.pdf'):
+				pdf_files.append(os.path.join(root, file))
+	return pdf_files
+
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
-		print("Usage: python SKA2025parser.py <pdf_file_path>")
+		print("Usage: python SKA2025parser.py <pdf_root_dir>")
 		sys.exit(1)
-	pdf_file = sys.argv[1]
-	text_pages = read_sparkasse_kontoauszug(pdf_file)
-	for i, page_text in enumerate(text_pages):
-		print(f"--- Page {i+1} ---")
-		raw_entries = extract_raw_entries_from_page_text(page_text)
-		for i_e, raw_entry in enumerate(raw_entries):
-			entry = entryRawText_to_entry(raw_entry)
-			print(f"- Entry {i+1}.{i_e+1} -")
-			print(entry.date)
-			print(entry.kind)
-			print(entry.amount)
-			print(entry.subject)
-			print(entry.creditor_id)
-			print()
+	pdf_root_dir = sys.argv[1]
+	files = find_pdf_files(pdf_root_dir)
+	for pdf_file in files:
+		text_pages = read_sparkasse_kontoauszug(pdf_file)
+		entries = []
+		for page_text in text_pages:
+			raw_entries = extract_raw_entries_from_page_text(page_text)
+			for raw_entry in raw_entries:
+				entry = entryRawText_to_entry(raw_entry)
+				entries.append(entry)
+
+		csv_filename = os.path.splitext(pdf_file)[0] + "_entries.csv"
+		with open(csv_filename, mode="w", newline="", encoding="utf-8") as csvfile:
+			writer = csv.writer(csvfile)
+			writer.writerow(["date", "kind", "amount", "subject", "creditor_id"])
+			for entry in entries:
+				writer.writerow([entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])

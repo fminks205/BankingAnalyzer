@@ -1,0 +1,40 @@
+<div cdkDropListGroup>
+	<div class="example-container">
+		<h2>Nicht zugewiesen</h2>
+
+		<div
+			cdkDropList
+			[cdkDropListData]="todo"
+			class="example-list"
+			(cdkDropListDropped)="drop($event)">
+			@for (item of todo; track item) {
+				<div class="example-box" cdkDrag>
+					{{item.amount}}
+					<br>
+					{{item.subject}}
+				</div>
+			}
+		</div>
+	</div>
+
+	@for(lane of lanes; track lane){
+		<div class="example-container">
+			<h2>{{lane.name}}</h2>
+
+			<div
+				cdkDropList
+				[cdkDropListData]="lane.entries"
+				class="example-list"
+				(cdkDropListDropped)="drop($event)">
+				@for (item of lane.entries; track item) {
+					<div class="example-box" cdkDrag>
+						{{item.amount}}
+						<br>
+						{{item.subject}}
+					</div>
+				}
+			</div>
+		</div>
+	}
+
+</div>

@@ -1,5 +1,5 @@
-	import { Inject, Injectable, OnInit, signal, WritableSignal } from '@angular/core';
-	import { BASE_PATH, DefaultService, DefaultServiceInterface, Report } from '../client/src/app/core/modules/openapi';
+	import { Injectable, signal, WritableSignal } from '@angular/core';
+	import { DefaultService, Report } from '../../client/openapi';
 	
 	@Injectable({
 		providedIn: 'root'

@@ -1,24 +1,15 @@
-import { Component, computed, signal, Signal } from '@angular/core';
-import { TransactionsHolder } from '../../service/transactions-holder';
+import { Component } from '@angular/core';
+import { TransactionsHolder } from '../../service/transaction-holder/transactions-holder';
+import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
 
 @Component({
 	selector: 'app-transaction-lanes-page',
-	imports: [],
+	imports: [TransactionCategoryDragDrop],
 	templateUrl: './transaction-lanes-page.html',
 	styleUrl: './transaction-lanes-page.scss'
 })
 export class TransactionLanesPage {
-	text$: Signal<string> = signal("")
 	constructor(
-		private txHolder: TransactionsHolder
-	){
-		this.wireTransactions()
-	}
-
-	wireTransactions(){
-		this.text$ = computed(()=>{
-			let reports = this.txHolder.reports$()
-			return JSON.stringify(reports)
-		})
-	}
+		public txHolder: TransactionsHolder
+	){}
 }

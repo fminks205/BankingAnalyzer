@@ -1,3 +1,5 @@
-<p>transaction-lanes-page works!</p>
-
-<p>{{text$()}}</p>
+@for(report of txHolder.reports$(); track report){
+	<app-transaction-category-drag-drop
+		[report]="report"
+	></app-transaction-category-drag-drop>
+}

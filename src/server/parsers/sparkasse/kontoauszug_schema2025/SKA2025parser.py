@@ -15,7 +15,7 @@ TABLE_HEADER = "Datum Erläuterung Betrag EUR"
 ## Entry
 ### 1st line: "03.07.2025Lastschrift -66,89"
 # Updated regex to allow optional spaces and match descriptions with slashes/colons
-ENTRY_REGEX = re.compile(r"(\d{2}\.\d{2}\.\d{4})\s*(.*)\s*(-?\d+,\d{2})")
+ENTRY_REGEX = re.compile(r"(\d{2}\.\d{2}\.\d{4})\s*(.*?)\s*(-?\d+,\d{2})")
 ### Subject lines: "Some Company 02122any-gibberish-stuff12323 Gläubiger-ID"
 SUBJECT_REGEX = re.compile(r"(.*) Gläubiger-ID:(.+)")
 
@@ -67,12 +67,7 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 
 	return entries
 
-
-if __name__ == "__main__":
-	if len(sys.argv) < 2:
-		print("Usage: python SKA2025parser.py <pdf_root_dir>")
-		sys.exit(1)
-	pdf_root_dir = sys.argv[1]
+def rebuild_csv_files(pdf_root_dir: str):
 	files = find_pdf_files(pdf_root_dir)
 	for pdf_file in files:
 		print(f"generating csv for {pdf_file}")
@@ -90,3 +85,10 @@ if __name__ == "__main__":
 			writer.writerow(["date", "kind", "amount", "subject", "creditor_id"])
 			for entry in entries:
 				writer.writerow([entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])
+
+if __name__ == "__main__":
+	if len(sys.argv) < 2:
+		print("Usage: python SKA2025parser.py <pdf_root_dir>")
+		sys.exit(1)
+	pdf_root_dir = sys.argv[1]
+	rebuild_csv_files(pdf_root_dir)

@@ -11,12 +11,6 @@ cd src\gui
 npx ng serve
 ```
 
-For Auszug-pdf files extract .csv files
-```shell
-py -m src.server.parsers.sparkasse.kontoauszug_schema2025.SKA2025parser <path to pdf root>
-```
-
-
 ## Development
 
 ```shell

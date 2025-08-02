@@ -10,7 +10,7 @@ from src.server.domain.Entry import Entry
 def create_endpoints(app):
 	@app.get("/reports", response_model=List[Report])
 	def get_reports():
-		raw_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','resources' ,'Kontoauszuege'))
+		raw_data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'Kontoauszuege'))
 		files = find_csv_files(raw_data_dir)
 		reports = []
 		for file in files:
@@ -23,5 +23,6 @@ def create_endpoints(app):
 	
 	@app.get("/reports/rebuild_csv", response_model=str)
 	def rebuild_csv():
-		rebuild_csv_files("resources/Kontoauszuege")
+		csv_target_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'Kontoauszuege'))
+		rebuild_csv_files("resources/Kontoauszuege", csv_target_dir)
 		return "successfully created csv files"

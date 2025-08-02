@@ -67,7 +67,7 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 
 	return entries
 
-def rebuild_csv_files(pdf_root_dir: str):
+def rebuild_csv_files(pdf_root_dir: str, csv_root_dir: str):
 	files = find_pdf_files(pdf_root_dir)
 	for pdf_file in files:
 		print(f"generating csv for {pdf_file}")
@@ -79,16 +79,11 @@ def rebuild_csv_files(pdf_root_dir: str):
 				entry = entryRawText_to_entry(raw_entry)
 				entries.append(entry)
 
-		csv_filename = os.path.splitext(pdf_file)[0] + "_entries.csv"
-		with open(csv_filename, mode="w", newline="", encoding="utf-8") as csvfile:
+		base_filename = os.path.basename(pdf_file)
+		csv_file = f"{base_filename}.csv"
+		csv_file_path = os.path.join(csv_root_dir, csv_file)
+		with open(csv_file_path, mode="w", newline="", encoding="utf-8") as csvfile:
 			writer = csv.writer(csvfile)
 			writer.writerow(["date", "kind", "amount", "subject", "creditor_id"])
 			for entry in entries:
 				writer.writerow([entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])
-
-if __name__ == "__main__":
-	if len(sys.argv) < 2:
-		print("Usage: python SKA2025parser.py <pdf_root_dir>")
-		sys.exit(1)
-	pdf_root_dir = sys.argv[1]
-	rebuild_csv_files(pdf_root_dir)

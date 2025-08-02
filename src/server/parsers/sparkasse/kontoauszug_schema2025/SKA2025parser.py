@@ -1,10 +1,10 @@
-import pdfplumber
 import re
 from typing import List
 import sys
 import os
 import csv
 
+from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.domain.Entry import Entry
 from src.server.domain.EntryRawText import EntryRawText
 
@@ -67,20 +67,6 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 
 	return entries
 
-def read_sparkasse_kontoauszug(pdf_path):
-	pages_text = []
-	with pdfplumber.open(pdf_path) as pdf:
-		for page in pdf.pages:
-			pages_text.append(page.extract_text())
-	return pages_text
-
-def find_pdf_files(directory: str) -> List[str]:
-	pdf_files = []
-	for root, _, files in os.walk(directory):
-		for file in files:
-			if file.lower().endswith('.pdf'):
-				pdf_files.append(os.path.join(root, file))
-	return pdf_files
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
@@ -89,7 +75,8 @@ if __name__ == "__main__":
 	pdf_root_dir = sys.argv[1]
 	files = find_pdf_files(pdf_root_dir)
 	for pdf_file in files:
-		text_pages = read_sparkasse_kontoauszug(pdf_file)
+		print(f"generating csv for {pdf_file}")
+		text_pages = read_pdf(pdf_file)
 		entries = []
 		for page_text in text_pages:
 			raw_entries = extract_raw_entries_from_page_text(page_text)

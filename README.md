@@ -2,7 +2,7 @@
 
 Start server
 ```shell
-py -m src.server.api.api
+py -m src.server.api.server
 ```
 
 For Auszug-pdf files extract .csv files
@@ -16,3 +16,8 @@ py -m src.server.parsers.sparkasse.kontoauszug_schema2025.SKA2025parser <path to
 ```shell
 .\venv\Scripts\Activate
 ```
+
+```shell
+py -m src.server.api.openapiExport
+```
+

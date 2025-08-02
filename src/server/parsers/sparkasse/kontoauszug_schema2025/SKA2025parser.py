@@ -15,7 +15,7 @@ TABLE_HEADER = "Datum Erläuterung Betrag EUR"
 ## Entry
 ### 1st line: "03.07.2025Lastschrift -66,89"
 # Updated regex to allow optional spaces and match descriptions with slashes/colons
-ENTRY_REGEX = re.compile(r"(\d{2}\.\d{2}\.\d{4})\s*(.*?)\s*(-?\d+,\d{2})")
+ENTRY_REGEX = re.compile(r"(\d{2}\.\d{2}\.\d{4})\s*(.*?)\s*(-?[\.\d]+,\d{2})")
 ### Subject lines: "Some Company 02122any-gibberish-stuff12323 Gläubiger-ID"
 SUBJECT_REGEX = re.compile(r"(.*) Gläubiger-ID:(.+)")
 

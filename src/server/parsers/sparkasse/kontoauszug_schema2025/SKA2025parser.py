@@ -1,9 +1,6 @@
 import re
 from typing import List
-import os
 
-from src.server.filesystem.csvutil import write_entries_to_csv
-from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.domain.Entry import Entry
 from src.server.domain.EntryRawText import EntryRawText
 
@@ -65,21 +62,3 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 		entries.append(EntryRawText(current_header, current_subject))
 
 	return entries
-
-def rebuild_csv_files(pdf_root_dir: str, csv_root_dir: str):
-	files = find_pdf_files(pdf_root_dir)
-	for pdf_file in files:
-		print(f"generating csv for {pdf_file}")
-		text_pages = read_pdf(pdf_file)
-
-		entries = []
-		for page_text in text_pages:
-			raw_entries = extract_raw_entries_from_page_text(page_text)
-			for raw_entry in raw_entries:
-				entry = entryRawText_to_entry(raw_entry)
-				entries.append(entry)
-
-		base_filename = os.path.basename(pdf_file)
-		csv_file = f"{base_filename}.csv"
-		csv_file_path = os.path.join(csv_root_dir, csv_file)
-		write_entries_to_csv(csv_file_path, entries)

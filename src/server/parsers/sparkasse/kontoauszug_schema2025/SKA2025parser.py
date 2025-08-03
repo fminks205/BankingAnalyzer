@@ -5,6 +5,9 @@ from src.server.domain.Entry import Entry
 from src.server.domain.EntryRawText import EntryRawText
 
 # Table
+## Date
+DATE_REGEX = re.compile(r"Kontoauszug (\d+)/(\d+)")
+
 ## Header
 TABLE_HEADER = "Datum Erläuterung Betrag EUR"
 ## Optional balacne line: Kontostand am 30.06.2025, Auszug Nr. 6 2.845,42
@@ -62,3 +65,12 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 		entries.append(EntryRawText(current_header, current_subject))
 
 	return entries
+
+def extract_date(text: str):
+	lines = text.splitlines()
+	for line in lines:
+		date_match = DATE_REGEX.match(line)
+		if date_match:
+			month, year = date_match.groups()
+			return int(month), int(year)
+	return 0, 0

@@ -3,3 +3,7 @@ GET http://127.0.0.1:8000/reports/rebuild_csv
 ###
 
 GET http://127.0.0.1:8000/reports
+
+###
+
+GET http://127.0.0.1:8000/lanes

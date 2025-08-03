@@ -1,4 +1,6 @@
-<h2>Kontoauszug {{report.month}}/{{report.year}}</h2>
+<h2 class="text-3xl font-bold underline">
+	Kontoauszug {{report.month}}/{{report.year}}
+</h2>
 <div cdkDropListGroup>
 	<div class="example-container">
 		<h2>Nicht zugewiesen</h2>
@@ -18,16 +20,15 @@
 		</div>
 	</div>
 
-	@for(lane of lanes; track lane){
+	@for(ddlane of dragDropLanes; track ddlane){
 		<div class="example-container">
-			<h2>{{lane.name}}</h2>
-
+			<h2>{{ddlane.lane.name}}</h2>
 			<div
 				cdkDropList
-				[cdkDropListData]="lane.entries"
+				[cdkDropListData]="ddlane.entries"
 				class="example-list"
 				(cdkDropListDropped)="drop($event)">
-				@for (item of lane.entries; track item) {
+				@for (item of ddlane.entries; track item) {
 					<div class="example-box" cdkDrag>
 						{{item.amount}}
 						<br>

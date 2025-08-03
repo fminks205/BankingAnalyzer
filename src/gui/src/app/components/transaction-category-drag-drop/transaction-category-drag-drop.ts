@@ -2,9 +2,10 @@ import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, t
 import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Report } from '../../client/openapi/model/report';
 import { Entry } from '../../client/openapi/model/entry';
+import { Lane } from '../../client/openapi';
 
-export interface Lane{
-	name: string,
+export interface DragDropLane{
+	lane: Lane,
 	entries: Entry[],
 }
 
@@ -22,22 +23,22 @@ export class TransactionCategoryDragDrop implements OnInit{
 	report!: Report
 
 	@Input()
-	laneNames: string[] = ["Lebensmittel", "Laufende Kosten", "Hobby"]
+	inputLanes!: Lane[]
 
 	@ViewChildren(CdkDropList)
 	dropLists!: QueryList<CdkDropList>
   
 	todo: Entry[] = [];
 
-	lanes: Lane[] = []
+	dragDropLanes: DragDropLane[] = []
 
 	ngOnInit(): void {
 		this.todo = this.report.entries
-		this.lanes = this.laneNames
-			.map(name => {return {
-				name: name,
-				entries: [],
-			}})
+		this.dragDropLanes = this.inputLanes
+			.map(lane => {return {
+				lane: lane,
+				entries: []
+			}})	
 	}
 
 	drop(event: CdkDragDrop<Entry[]>) {

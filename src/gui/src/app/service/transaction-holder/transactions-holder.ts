@@ -15,7 +15,7 @@
 
 		fireRequest(): void {
 			console.debug(`Requesting reports from server`)
-			this.service.getReportsReportsGet()
+			this.service.getReports()
 				.subscribe({
 					next: (response)=>{
 						console.debug(`Received ${response.length} reports from server`)

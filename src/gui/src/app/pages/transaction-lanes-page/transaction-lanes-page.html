@@ -1,5 +1,12 @@
+<div style="display: flex; justify-content: flex-end;">
+	<button pButton>
+		<span pButtonLabel>Save</span>
+	</button>
+</div>
+
 @for(report of txHolder.reports$(); track report){
 	<app-transaction-category-drag-drop
 		[report]="report"
+		[inputLanes]="laneHolder.lanes$()"
 	></app-transaction-category-drag-drop>
 }

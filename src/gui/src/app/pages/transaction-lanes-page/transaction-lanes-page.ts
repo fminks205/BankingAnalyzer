@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TransactionsHolder } from '../../service/transaction-holder/transactions-holder';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
+import { LaneHolder } from '../../service/lane-holder/lane-holder';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
@@ -10,6 +11,7 @@ import { TransactionCategoryDragDrop } from "../../components/transaction-catego
 })
 export class TransactionLanesPage {
 	constructor(
-		public txHolder: TransactionsHolder
+		public txHolder: TransactionsHolder,
+		public laneHolder: LaneHolder,
 	){}
 }

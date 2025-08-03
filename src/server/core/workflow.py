@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 
+from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
 from src.server.domain.Report import Report
 from src.server.config.FilePathsConfig import FilePathsConfig
@@ -57,3 +58,9 @@ def get_reports():
 			report.year = int(metadata["year"])
 		reports.append(report)
 	return reports
+
+def get_lanes():
+	file = FilePathsConfig.get_lane_file_path()
+	df = pd.read_csv(file, comment="#")
+	df = df.fillna('')
+	return [Lane(**row) for row in df.to_dict(orient='records')]

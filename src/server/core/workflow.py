@@ -4,9 +4,18 @@ import pandas as pd
 from src.server.domain.Entry import Entry
 from src.server.domain.Report import Report
 from src.server.config.FilePathsConfig import FilePathsConfig
-from src.server.filesystem.csvutil import find_csv_files, write_entries_to_csv
+from src.server.filesystem.csvutil import find_csv_files, write_entries_to_csv, write_lanes_to_csv
 from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.parsers.sparkasse.kontoauszug_schema2025.SKA2025parser import entryRawText_to_entry, extract_raw_entries_from_page_text
+
+
+def init_lane_file():
+	path = FilePathsConfig.get_lane_file_path()
+	if os.path.isfile(path):
+		print("Lanes file already exists")
+	else:
+		print("Creating lanes file")
+		write_lanes_to_csv(path, [])
 
 
 def rebuild_csv_files():

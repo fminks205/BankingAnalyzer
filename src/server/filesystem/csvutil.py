@@ -2,7 +2,15 @@ import csv
 import os
 from typing import List
 
+from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
+
+def write_lanes_to_csv(path: str, lanes: list[Lane]):
+	with open(path, mode="w", newline="", encoding="utf-8") as csvfile:
+		writer = csv.writer(csvfile)
+		writer.writerow(["id", "name", "description"])
+		for lane in lanes:
+			writer.writerow([lane.id, lane.name, lane.description if lane.description else ""])
 
 def find_csv_files(directory: str) -> List[str]:
 	results = []

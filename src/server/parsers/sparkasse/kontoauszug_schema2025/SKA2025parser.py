@@ -1,9 +1,8 @@
 import re
 from typing import List
-import sys
 import os
-import csv
 
+from src.server.filesystem.csvutil import write_entries_to_csv
 from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.domain.Entry import Entry
 from src.server.domain.EntryRawText import EntryRawText
@@ -72,6 +71,7 @@ def rebuild_csv_files(pdf_root_dir: str, csv_root_dir: str):
 	for pdf_file in files:
 		print(f"generating csv for {pdf_file}")
 		text_pages = read_pdf(pdf_file)
+
 		entries = []
 		for page_text in text_pages:
 			raw_entries = extract_raw_entries_from_page_text(page_text)
@@ -82,8 +82,4 @@ def rebuild_csv_files(pdf_root_dir: str, csv_root_dir: str):
 		base_filename = os.path.basename(pdf_file)
 		csv_file = f"{base_filename}.csv"
 		csv_file_path = os.path.join(csv_root_dir, csv_file)
-		with open(csv_file_path, mode="w", newline="", encoding="utf-8") as csvfile:
-			writer = csv.writer(csvfile)
-			writer.writerow(["date", "kind", "amount", "subject", "creditor_id"])
-			for entry in entries:
-				writer.writerow([entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])
+		write_entries_to_csv(csv_file_path, entries)

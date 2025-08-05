@@ -8,7 +8,7 @@ py -m src.server.api.server
 Start gui
 ```shell
 cd src\gui
-npx ng serve
+npm run start
 ```
 
 ## Development

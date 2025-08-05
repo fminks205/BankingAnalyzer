@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { TransactionsHolder } from '../../service/transaction-holder/transactions-holder';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
 import { LaneHolder } from '../../service/lane-holder/lane-holder';
@@ -13,7 +13,8 @@ import { ButtonModule } from 'primeng/button';
 		ButtonModule,
 	],
 	templateUrl: './transaction-lanes-page.html',
-	styleUrl: './transaction-lanes-page.scss'
+	styleUrl: './transaction-lanes-page.scss',
+	encapsulation: ViewEncapsulation.None
 })
 export class TransactionLanesPage {
 visible: any;

@@ -1,4 +1,5 @@
 import os
+from typing import List
 import pandas as pd
 
 from src.server.domain.Lane import Lane
@@ -66,3 +67,7 @@ def get_lanes():
 	df = pd.read_csv(file, comment="#")
 	df = df.fillna('')
 	return [Lane(**row) for row in df.to_dict(orient='records')]
+
+def post_lanes(lanes: List[Lane]):
+	path = FilePathsConfig.get_lane_file_path()
+	return write_lanes_to_csv(path, lanes)

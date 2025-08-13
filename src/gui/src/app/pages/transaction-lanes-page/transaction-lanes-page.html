@@ -2,7 +2,13 @@
 	<button pButton>
 		<span pButtonLabel
 			(click)="openNewLaneDialogClick()"
-		>Add Lane</span>
+		>Add lane</span>
+	</button>
+
+	<button pButton>
+		<span pButtonLabel
+			(click)="laneHolder.saveToCsv()"
+		>Save lanes</span>
 	</button>
 </div>
 

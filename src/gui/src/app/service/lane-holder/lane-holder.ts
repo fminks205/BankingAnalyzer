@@ -23,4 +23,15 @@ export class LaneHolder {
 					}
 				})
 		}
+
+		saveToCsv(){
+			console.debug(`Post lanes to server`)
+			this.service.postLanes(this.lanes$())
+				.subscribe({
+					next: (response)=>{
+						console.debug(`Received ${response.length} lanes from server as a POST response`)
+						this.lanes$.set(response)
+					}
+				})
+		}
 }

@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Entry(BaseModel):
+	id: int
 	date: str | None 
 	kind: str | None 
 	amount: str | None 

@@ -31,12 +31,14 @@ def rebuild_csv_files():
 			"year": year
 		}
 
-		entries = []
+		entries: list[Entry] = []
 		for page_text in text_pages:
 			raw_entries = extract_raw_entries_from_page_text(page_text)
 			for raw_entry in raw_entries:
 				entry = entryRawText_to_entry(raw_entry)
 				entries.append(entry)
+		for i, entry in enumerate(entries):
+			entry.id = i
 
 		base_filename = os.path.basename(pdf_file)
 		csv_file = f"{base_filename}.csv"

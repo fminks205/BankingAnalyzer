@@ -25,9 +25,9 @@ def write_entries_to_csv(path: str, entries: list[Entry], metadata):
 		writer = csv.writer(csvfile)
 		for k, v in metadata.items():
 			csvfile.write(f"# {k}: {v}\n")
-		writer.writerow(["date", "kind", "amount", "subject", "creditor_id"])
+		writer.writerow(["id", "date", "kind", "amount", "subject", "creditor_id"])
 		for entry in entries:
-			writer.writerow([entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])
+			writer.writerow([entry.id, entry.date, entry.kind, entry.amount, entry.subject, entry.creditor_id if entry.creditor_id else ""])
 
 def read_csv_metadata(file_path):
 	metadata = {}

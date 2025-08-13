@@ -39,7 +39,7 @@ def entryRawText_to_entry(raw_entry: EntryRawText) -> Entry:
 		subject = raw_entry.subject.strip()
 		creditor_id = None
 
-	return Entry(date=date, kind=kind.strip(), amount=amount, subject=subject, creditor_id=creditor_id)
+	return Entry(id = 0, date=date, kind=kind.strip(), amount=amount, subject=subject, creditor_id=creditor_id)
 
 def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 	entries: List[EntryRawText] = []

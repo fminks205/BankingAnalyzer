@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	@for(ddlane of dragDropLanes; track ddlane){
+	@for(ddlane of dragDropLanes$(); track ddlane){
 		<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
 			<h2>{{ddlane.lane.name}}</h2>
 			<div

@@ -2,50 +2,29 @@
 	<button pButton>
 		<span pButtonLabel
 			(click)="openNewLaneDialogClick()"
-		>Save</span>
+		>Add Lane</span>
 	</button>
 </div>
 
 @for(report of txHolder.reports$(); track report){
 	<app-transaction-category-drag-drop
 		[report]="report"
-		[inputLanes]="laneHolder.lanes$()"
 	></app-transaction-category-drag-drop>
 }
-
-<p-dialog header="Edit Profile" [modal]="true" [(visible)]="newLaneDialogVisible" [style]="{ width: '25rem' }">
-	<span class="p-text-secondary block mb-8">Update your information.</span>
-	<div class="flex items-center gap-4 mb-4">
-		<label for="username" class="font-semibold w-24">Username</label>
-		<input pInputText id="username" class="flex-auto" autocomplete="off" />
-	</div>
-	<div class="flex items-center gap-4 mb-8">
-		<label for="email" class="font-semibold w-24">Email</label>
-		<input pInputText id="email" class="flex-auto" autocomplete="off" />
-	</div>
-	<div class="flex justify-end gap-2">
-		<p-button label="Cancel" severity="secondary" (click)="visible = false" />
-		<p-button label="Save" (click)="visible = false"/>
-	</div>
-</p-dialog>
-
-
-<p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
-	<div class="card flex justify-center">
-
-		<span class="p-text-secondary block mb-8">Update your information.</span>
-		<div class="flex items-center gap-4 mb-4">
-			<label for="username" class="font-semibold w-24">Username</label>
-			<input pInputText id="username" class="flex-auto" autocomplete="off" />
+<p-dialog header="Add Lane" [modal]="true" [(visible)]="newLaneDialogVisible" [style]="{ width: '30rem' }">
+	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
+		<span class="p-text-secondary block mb-4 text-center">Create a new lane and confirm your changes</span>
+		<p-floatlabel variant="on" style="width: 100%; max-width: 400px;">
+			<input pInputText [(ngModel)]="newLaneName" id="lanename" class="w-full" autocomplete="off" style="width: 100%;" />
+			<label for="lanename" class="text-sm text-gray-500 block">Lane Name</label>
+		</p-floatlabel>
+		<p-floatlabel variant="on" style="width: 100%; max-width: 400px;">
+			<textarea pInputTextarea [(ngModel)]="newLaneDescription" id="description" class="w-full" rows="3" autocomplete="off" style="width: 100%;" ></textarea>
+			<label for="description" class="text-sm text-gray-500 block">Description</label>
+		</p-floatlabel>
+		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
+			<p-button label="Cancel" severity="secondary" (click)="newLaneDialogVisible = false" />
+			<p-button label="Save" (click)="newLaneDialogVisible = false; addLane(newLaneName, newLaneDescription)" />
 		</div>
-		<div class="flex items-center gap-4 mb-8">
-			<label for="email" class="font-semibold w-24">Email</label>
-			<input pInputText id="email" class="flex-auto" autocomplete="off" />
-		</div>
-		<div class="flex justify-end gap-2">
-			<p-button label="Cancel" severity="secondary" (click)="visible = false" />
-			<p-button label="Save" (click)="visible = false" />
-		</div>
-
 	</div>
 </p-dialog>

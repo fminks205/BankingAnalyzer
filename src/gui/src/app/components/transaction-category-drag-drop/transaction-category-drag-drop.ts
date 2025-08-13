@@ -1,8 +1,9 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, computed, Input, OnInit, QueryList, signal, Signal, ViewChildren } from '@angular/core';
 import { Report } from '../../client/openapi/model/report';
 import { Entry } from '../../client/openapi/model/entry';
 import { Lane } from '../../client/openapi';
+import { LaneHolder } from '../../service/lane-holder/lane-holder';
 
 export interface DragDropLane{
 	lane: Lane,
@@ -22,23 +23,33 @@ export class TransactionCategoryDragDrop implements OnInit{
 	@Input()
 	report!: Report
 
-	@Input()
-	inputLanes!: Lane[]
-
 	@ViewChildren(CdkDropList)
 	dropLists!: QueryList<CdkDropList>
   
 	todo: Entry[] = [];
 
-	dragDropLanes: DragDropLane[] = []
+	dragDropLanes$: Signal<DragDropLane[]> = signal([])
+
+	constructor(
+		public laneHolder: LaneHolder,
+	){
+		this.wireLanesToDropAreas()
+	}
 
 	ngOnInit(): void {
 		this.todo = this.report.entries
-		this.dragDropLanes = this.inputLanes
-			.map(lane => {return {
-				lane: lane,
-				entries: []
-			}})	
+	}
+
+	wireLanesToDropAreas(){
+		this.dragDropLanes$ = computed(()=>{
+			let lanes = this.laneHolder.lanes$()
+			let dragDropLanes = lanes
+				.map(lane => {return {
+					lane: lane,
+					entries: []
+				}})	
+			return dragDropLanes
+		})
 	}
 
 	drop(event: CdkDragDrop<Entry[]>) {

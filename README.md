@@ -23,7 +23,9 @@ py -m src.server.api.openapiExport
 ```
 
 Create angular client from openapi.yml
-```
-npx openapi-generator-cli generate -i ../../build/openapi/openapi.yml -g typescript-angular -o src/app/client/openapi --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model
+``` shell
+cd .\src\gui &
+npx openapi-generator-cli generate -i ../../build/openapi/openapi.yml -g typescript-angular -o src/app/client/openapi --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model &
+cd ..\..
 ```
 

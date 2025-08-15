@@ -1,15 +1,21 @@
-<div style="display: flex; justify-content: flex-end;">
-	<button pButton>
-		<span pButtonLabel
-			(click)="openNewLaneDialogClick()"
-		>Add lane</span>
-	</button>
+<div class="card">
+	<p-toolbar>
+		<ng-template #start>
+		</ng-template>
+		<ng-template #end>
+			<button pButton>
+				<span pButtonLabel
+					(click)="openNewLaneDialogClick()"
+				>Add lane</span>
+			</button>
 
-	<button pButton>
-		<span pButtonLabel
-			(click)="laneHolder.saveToCsv()"
-		>Save lanes</span>
-	</button>
+			<button pButton>
+				<span pButtonLabel
+					(click)="onClickSave()"
+				>Save</span>
+			</button>
+		</ng-template>
+	</p-toolbar>
 </div>
 
 @for(report of txHolder.reports$(); track report){
@@ -30,7 +36,7 @@
 		</p-floatlabel>
 		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
 			<p-button label="Cancel" severity="secondary" (click)="newLaneDialogVisible = false" />
-			<p-button label="Save" (click)="newLaneDialogVisible = false; addLane(newLaneName, newLaneDescription)" />
+			<p-button label="Save" (click)="newLaneDialogVisible = false; onClickAddLane(newLaneName, newLaneDescription)" />
 		</div>
 	</div>
 </p-dialog>

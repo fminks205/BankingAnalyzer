@@ -5,6 +5,7 @@ import { Entry } from '../../client/openapi/model/entry';
 import { Lane } from '../../client/openapi';
 import { LaneHolder } from '../../service/lane-holder/lane-holder';
 import { ButtonDirective } from "primeng/button";
+import { TxLaneAssignmentHolder, TxLaneAssignmentKey } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 
 export interface DragDropLane{
 	lane: Lane,
@@ -30,18 +31,19 @@ export class TransactionCategoryDragDrop implements OnInit{
 	@ViewChildren(CdkDropList)
 	dropLists!: QueryList<CdkDropList>
   
-	todo: Entry[] = [];
+	unassignedTodos: Entry[] = [];
 
 	dragDropLanes$: WritableSignal<DragDropLane[]> = signal([])
 
 	constructor(
 		public laneHolder: LaneHolder,
+		public txLaneAssignmentsHolder: TxLaneAssignmentHolder,
 	){
 		this.wireLanesToDropAreas()
 	}
 
 	ngOnInit(): void {
-		this.todo = this.report.entries
+		this.unassignedTodos = this.report.entries
 	}
 
 	onClickRemoveLane(laneToDelete: DragDropLane) {
@@ -64,7 +66,7 @@ export class TransactionCategoryDragDrop implements OnInit{
 						== undefined
 				)
 			for (let removedDDlane of removedLanes){
-				this.todo = this.todo.concat(removedDDlane.entries)
+				this.unassignedTodos = this.unassignedTodos.concat(removedDDlane.entries)
 				removedDDlane.entries = []
 			}
 			// Now all lanes to delete have been cleared
@@ -78,10 +80,34 @@ export class TransactionCategoryDragDrop implements OnInit{
 		})
 	}
 
-	drop(event: CdkDragDrop<Entry[]>) {
+	drop(event: CdkDragDrop<Entry[]>, ddLane: DragDropLane | undefined) {
+
 		if (event.previousContainer === event.container) {
 			moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
 		} else {
+			if (
+				event.item.data == undefined
+				|| this.report == undefined
+				|| this.report.month == undefined
+				|| this.report.year == undefined
+				|| ddLane == undefined
+			) return
+
+			const key: TxLaneAssignmentKey = {
+				year: this.report.year,
+				month: this.report.month,
+				entryId: (event.item.data as Entry).id
+			}
+			if(ddLane.lane.id == undefined){
+				console.debug(`Deleting assignment: ${key.entryId}-${key.year}-${key.month}`)
+				this.txLaneAssignmentsHolder.deleteAssignment(key)
+			} else {
+				console.debug(`Setting assignment: ${key.entryId}-${key.year}-${key.month}:${ddLane.lane.id}`)
+				this.txLaneAssignmentsHolder.setAssignment(
+					key, 
+					ddLane.lane.id
+				)
+			}
 			transferArrayItem(
 				event.previousContainer.data,
 				event.container.data,

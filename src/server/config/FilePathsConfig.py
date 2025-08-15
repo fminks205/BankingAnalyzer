@@ -12,3 +12,7 @@ class FilePathsConfig:
 	@staticmethod
 	def get_lane_file_path():
 		return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'lanes', 'lanes.csv'))
+	
+	@staticmethod
+	def get_lane_entry_assignments_file_path():
+		return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'lanes', 'lane-entry-assignments.csv'))

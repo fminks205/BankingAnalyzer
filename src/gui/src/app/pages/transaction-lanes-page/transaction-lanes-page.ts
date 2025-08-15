@@ -6,7 +6,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
+import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
+import { TxLaneAssignmentHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
@@ -17,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 		FloatLabel,
 		InputTextModule,
 		FormsModule,
+		Toolbar, 
 	],
 	templateUrl: './transaction-lanes-page.html',
 	styleUrl: './transaction-lanes-page.scss',
@@ -26,6 +29,7 @@ export class TransactionLanesPage {
 	constructor(
 		public txHolder: TransactionsHolder,
 		public laneHolder: LaneHolder,
+		public assignmentsHolder: TxLaneAssignmentHolder,
 	){}
 
 	newLaneDialogVisible = false;
@@ -37,7 +41,12 @@ export class TransactionLanesPage {
 		this.newLaneDialogVisible = true
 	}
 
-	addLane(name: string, description: string){
+	onClickSave(){
+		this.laneHolder.saveToCsv()
+		this.assignmentsHolder.saveToCsv()
+	}
+
+	onClickAddLane(name: string, description: string){
 		let lanes = this.laneHolder.lanes$();
 
 		for(let lane of lanes){

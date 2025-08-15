@@ -4,9 +4,10 @@ import pandas as pd
 
 from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
+from src.server.domain.LaneEntryAssignment import LaneEntryAssignment
 from src.server.domain.Report import Report
 from src.server.config.FilePathsConfig import FilePathsConfig
-from src.server.filesystem.csvutil import find_csv_files, read_csv_metadata, write_entries_to_csv, write_lanes_to_csv
+from src.server.filesystem.csvutil import find_csv_files, read_csv_metadata, write_entries_to_csv, write_lanes_to_csv, write_lane_entry_assignments_to_csv
 from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.parsers.sparkasse.kontoauszug_schema2025.SKA2025parser import entryRawText_to_entry, extract_date, extract_raw_entries_from_page_text
 
@@ -71,3 +72,7 @@ def get_lanes():
 def post_lanes(lanes: List[Lane]):
 	path = FilePathsConfig.get_lane_file_path()
 	return write_lanes_to_csv(path, lanes)
+
+def post_lane_entry_assignments(assignments: List[LaneEntryAssignment]):
+	path = FilePathsConfig.get_lane_entry_assignments_file_path()
+	return write_lane_entry_assignments_to_csv(path, assignments)

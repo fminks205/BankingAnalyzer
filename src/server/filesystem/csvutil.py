@@ -2,6 +2,7 @@ import csv
 import os
 from typing import List
 
+from src.server.domain.LaneEntryAssignment import LaneEntryAssignment
 from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
 
@@ -14,6 +15,18 @@ def write_lanes_to_csv(path: str, lanes: list[Lane])->List[Lane]:
 			writer.writerow([lane.id, lane.name, lane.description if lane.description else ""])
 			written_lanes.append(lane)
 	return written_lanes
+
+def write_lane_entry_assignments_to_csv(path: str, assignments: list[LaneEntryAssignment])->List[LaneEntryAssignment]:
+	written_assignments = []
+	with open(path, mode="w", newline="", encoding="utf-8") as csvfile:
+		writer = csv.writer(csvfile)
+		writer.writerow(["month", "year", "lane", "entry"])
+		for assignment in assignments:
+			if not assignment.lane:
+				continue
+			writer.writerow([assignment.month, assignment.year, assignment.lane, assignment.entry])
+			written_assignments.append(assignment)
+	return written_assignments
 
 def find_csv_files(directory: str) -> List[str]:
 	results = []

@@ -47,7 +47,7 @@ def rebuild_csv_files():
 		csv_file_path = os.path.join(FilePathsConfig.get_kontoauszug_csv_root(), csv_file)
 		write_entries_to_csv(csv_file_path, entries, metadata)
 
-def get_reports():
+def get_reports() -> list[Report]:
 	files = find_csv_files(FilePathsConfig.get_kontoauszug_csv_root())
 	reports = []
 	for file in files:

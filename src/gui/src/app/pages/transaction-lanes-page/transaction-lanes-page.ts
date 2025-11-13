@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { TxLaneAssignmentHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 import { Report } from '../../client/openapi';
 import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
+import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
@@ -38,6 +39,7 @@ export class TransactionLanesPage implements OnInit{
 
 	constructor(
 		public assignmentsHolder: TxLaneAssignmentHolder,
+		public dashboardCreator: DashboardCreator
 	){}
 
 	setSelectedReport(report: Report){
@@ -55,7 +57,7 @@ export class TransactionLanesPage implements OnInit{
 	}
 
 	createDashboardClick(){
-		
+		this.dashboardCreator.createDashboard()
 	}
 
 	onClickSave(){

@@ -2,27 +2,6 @@
 	Kontoauszug {{report.month}}/{{report.year}}
 </h2>
 <div cdkDropListGroup class="board-container">
-	<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
-		<h2>Nicht zugewiesen</h2>
-
-		<div
-			cdkDropList
-			[cdkDropListData]="unassignedTodos"
-			class="example-list"
-			(cdkDropListDropped)="drop($event, undefined)"
-			style="flex: 1; display: flex; flex-direction: column;">
-			@for (item of unassignedTodos; track item) {
-				<div class="example-box" 
-					cdkDrag 
-					[cdkDragData]="item">
-					{{item.amount}}
-					<br>
-					{{item.subject}}
-				</div>
-			}
-		</div>
-	</div>
-
 	@for(ddlane of dragDropLanes$(); track ddlane){
 		<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
 			<h2>
@@ -42,9 +21,9 @@
 					<div class="example-box" 
 						cdkDrag 
 						[cdkDragData]="item">
-						{{item.amount}}
+						{{item != undefined ? item.amount : "NA"}}
 						<br>
-						{{item.subject}}
+						{{item != undefined ? item.subject : "NA"}}
 					</div>
 				}
 			</div>

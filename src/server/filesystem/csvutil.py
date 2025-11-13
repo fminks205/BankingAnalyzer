@@ -22,7 +22,7 @@ def write_lane_entry_assignments_to_csv(path: str, assignments: list[LaneEntryAs
 		writer = csv.writer(csvfile)
 		writer.writerow(["month", "year", "lane", "entry"])
 		for assignment in assignments:
-			if not assignment.lane:
+			if assignment.lane is None:
 				continue
 			writer.writerow([assignment.month, assignment.year, assignment.lane, assignment.entry])
 			written_assignments.append(assignment)

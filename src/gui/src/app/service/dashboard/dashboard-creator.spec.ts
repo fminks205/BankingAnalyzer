@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TransactionsHolder } from './transactions-holder';
+import { DashboardCreator } from './dashboard-creator';
 
-describe('TransactionsHolder', () => {
-  let service: TransactionsHolder;
+describe('DashboardCreator', () => {
+  let service: DashboardCreator;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TransactionsHolder);
+    service = TestBed.inject(DashboardCreator);
   });
 
   it('should be created', () => {

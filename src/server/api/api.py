@@ -3,7 +3,7 @@ from typing import List
 from src.server.domain.Lane import Lane
 from src.server.domain.LaneEntryAssignment import LaneEntryAssignment
 from src.server.domain.Report import Report
-from src.server.core.workflow import get_lanes, get_reports, rebuild_csv_files, post_lanes, post_lane_entry_assignments
+from src.server.core.workflow import get_lane_entry_assignments, get_lanes, get_reports, rebuild_csv_files, post_lanes, post_lane_entry_assignments
 
 
 def create_endpoints(app):
@@ -24,6 +24,11 @@ def create_endpoints(app):
 	def post_lanes_request(lanes: List[Lane]):
 		return post_lanes(lanes)
 	
+	@app.get("/lanes-entry-assignments", response_model=List[LaneEntryAssignment], operation_id="get_lane_entry_assignments")
+	def post_lanes_request():
+		return get_lane_entry_assignments()
+	
 	@app.post("/lanes-entry-assignments", response_model=List[LaneEntryAssignment], operation_id="post_lane_entry_assignments")
 	def post_lanes_request(lanes: List[LaneEntryAssignment]):
+		print(lanes)
 		return post_lane_entry_assignments(lanes)

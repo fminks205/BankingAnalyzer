@@ -1,7 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { TransactionsHolder } from '../../service/transaction-holder/transactions-holder';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
-import { LaneHolder } from '../../service/lane-holder/lane-holder';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -9,67 +7,63 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { TxLaneAssignmentHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { Report } from '../../client/openapi';
+import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 
 @Component({
 	selector: 'app-transaction-lanes-page',
 	imports: [
-		TransactionCategoryDragDrop,
-		DialogModule,
-		ButtonModule,
-		FloatLabel,
-		InputTextModule,
-		FormsModule,
-		Toolbar, 
-	],
+    TransactionCategoryDragDrop,
+    DialogModule,
+    ButtonModule,
+    FloatLabel,
+    InputTextModule,
+    FormsModule,
+    Toolbar,
+    CdkDragPlaceholder
+],
 	templateUrl: './transaction-lanes-page.html',
 	styleUrl: './transaction-lanes-page.scss',
 	encapsulation: ViewEncapsulation.None
 })
-export class TransactionLanesPage {
-	constructor(
-		public txHolder: TransactionsHolder,
-		public laneHolder: LaneHolder,
-		public assignmentsHolder: TxLaneAssignmentHolder,
-	){}
+export class TransactionLanesPage implements OnInit{
+	@ViewChild(TransactionCategoryDragDrop)
+	reportDragDropLane!: TransactionCategoryDragDrop
 
 	newLaneDialogVisible = false;
 	newLaneName = ""
 	newLaneDescription = ""
 
+	selectedReport: Report | undefined = undefined
+
+	constructor(
+		public assignmentsHolder: TxLaneAssignmentHolder,
+	){}
+
+	setSelectedReport(report: Report){
+		this.selectedReport = report
+		this.reportDragDropLane.loadReportLanes(report)
+	}
+
+
+	ngOnInit(): void {
+		this.assignmentsHolder.loadCompleteStateFromServer()
+	}
+
 	openNewLaneDialogClick(){
-		console.log("Open dialog")
 		this.newLaneDialogVisible = true
 	}
 
+	createDashboardClick(){
+		
+	}
+
 	onClickSave(){
-		this.laneHolder.saveToCsv()
-		this.assignmentsHolder.saveToCsv()
+		this.assignmentsHolder.saveState()
 	}
 
 	onClickAddLane(name: string, description: string){
-		let lanes = this.laneHolder.lanes$();
-
-		for(let lane of lanes){
-			if (lane.name == name){
-				console.error(`Lane name ${name} is already taken`)
-				return
-			}
-		}
-
-		const takenIds = lanes.map(lane => lane.id);
-		let newId = 1;
-		while (takenIds.includes(newId)) {
-			newId++;
-		}
-
-		let newLane = {
-			id: newId,
-			name: name,
-			description: description
-		}
-
-		this.laneHolder.lanes$.set([...lanes, newLane])
-
-		console.info(`New lane pushed: ${newLane.name}`)
+		this.assignmentsHolder.addLane(name, description)
+		this.reportDragDropLane.loadReportLanes()
 	}
 }

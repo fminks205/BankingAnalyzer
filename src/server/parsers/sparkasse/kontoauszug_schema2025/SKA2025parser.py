@@ -49,9 +49,11 @@ def extract_raw_entries_from_page_text(text: str) -> List[EntryRawText]:
 	collecting: bool = False
 
 	lines = text.splitlines()
+	is_reading_signature = False
 	for line in lines:
-		if SIGNATURE_BLOCK_REGEX.match(line) or FINAL_BALANCE_REGEX.match(line):
-			break
+		if SIGNATURE_BLOCK_REGEX.match(line) or FINAL_BALANCE_REGEX.match(line) and not is_reading_signature:
+			is_reading_signature = True
+			continue
 		if ENTRY_REGEX.match(line):
 			if current_header is not None:
 				entries.append(EntryRawText(current_header, current_subject))

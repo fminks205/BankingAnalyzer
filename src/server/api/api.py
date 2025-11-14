@@ -34,7 +34,7 @@ def create_endpoints(app):
 	def post_lanes_request(assignments: List[LaneEntryAssignment]):
 		return post_lane_entry_assignments(assignments)
 	
-	@app.get("/dashboard", response_class=HTMLResponse)
+	@app.get("/dashboard", response_class=HTMLResponse, operation_id="get_dashboard")
 	def dashboard():
 		html_str = create_dashboard()
 		return HTMLResponse(content=html_str)

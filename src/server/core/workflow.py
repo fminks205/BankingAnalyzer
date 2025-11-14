@@ -24,7 +24,6 @@ def init_lane_file():
 def rebuild_csv_files():
 	files = find_pdf_files(FilePathsConfig.get_kontoauszug_pdfs_root_dir_relative())
 	for pdf_file in files:
-		print(f"generating csv for {pdf_file}")
 		text_pages = read_pdf(pdf_file)
 
 		month, year = extract_date(text_pages[0])

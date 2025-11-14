@@ -12,7 +12,7 @@ export class DashboardCreator {
   }
 
   createDashboard(){
-    this.client.dashboardDashboardGet()
+    this.client.getDashboard()
       .subscribe(html => {
           const blob = new Blob([html], { type: 'text/html' });
           const url = URL.createObjectURL(blob);

@@ -2,12 +2,13 @@ import os
 from typing import List
 import pandas as pd
 
+from src.server.domain.Filter import Filter
 from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
 from src.server.domain.LaneEntryAssignment import LaneEntryAssignment
 from src.server.domain.Report import Report
 from src.server.config.FilePathsConfig import FilePathsConfig
-from src.server.filesystem.csvutil import find_csv_files, read_csv_metadata, write_entries_to_csv, write_lanes_to_csv, write_lane_entry_assignments_to_csv
+from src.server.filesystem.csvutil import find_csv_files, read_csv_metadata, write_entries_to_csv, write_filters_to_csv, write_lanes_to_csv, write_lane_entry_assignments_to_csv
 from src.server.filesystem.pdfutil import find_pdf_files, read_pdf
 from src.server.parsers.sparkasse.kontoauszug_schema2025.SKA2025parser import entryRawText_to_entry, extract_date, extract_raw_entries_from_page_text
 
@@ -81,3 +82,13 @@ def get_lane_entry_assignments():
 def post_lane_entry_assignments(assignments: List[LaneEntryAssignment]):
 	path = FilePathsConfig.get_lane_entry_assignments_file_path()
 	return write_lane_entry_assignments_to_csv(path, assignments)
+
+def post_filter(filters: list[Filter]):
+	path = FilePathsConfig.get_filter_file_path()
+	return write_filters_to_csv(path, filters)
+
+def get_filter():
+	file = FilePathsConfig.get_filter_file_path()
+	df = pd.read_csv(file, comment="#")
+	df = df.fillna('')
+	return [Filter(**row) for row in df.to_dict(orient='records')]

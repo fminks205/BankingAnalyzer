@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, effect, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
@@ -8,8 +8,9 @@ import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { TxLaneAssignmentHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 import { Report } from '../../client/openapi';
-import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
+import { Select } from 'primeng/select';
 import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
+import { FilterHolder } from '../../service/filter-holder/filter-holder';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
@@ -19,9 +20,9 @@ import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
     ButtonModule,
     FloatLabel,
     InputTextModule,
+	Select,
     FormsModule,
     Toolbar,
-    CdkDragPlaceholder
 ],
 	templateUrl: './transaction-lanes-page.html',
 	styleUrl: './transaction-lanes-page.scss',
@@ -31,6 +32,13 @@ export class TransactionLanesPage implements OnInit{
 	@ViewChild(TransactionCategoryDragDrop)
 	reportDragDropLane!: TransactionCategoryDragDrop
 
+	newFilterDialogVisible = false;
+	categoryOptions = [
+		{ name: 'Category A', id: 1 },
+		{ name: 'Category B', id: 2 },
+		{ name: 'Category C', id: 3 }
+	];
+
 	newLaneDialogVisible = false;
 	newLaneName = ""
 	newLaneDescription = ""
@@ -39,21 +47,69 @@ export class TransactionLanesPage implements OnInit{
 
 	constructor(
 		public assignmentsHolder: TxLaneAssignmentHolder,
-		public dashboardCreator: DashboardCreator
-	){}
+		public dashboardCreator: DashboardCreator,
+		public filterHolder: FilterHolder
+	){
+		effect(()=>{
+			this.categoryOptions = this.assignmentsHolder.lanes$()
+		})
+	}
+
+	ngOnInit(): void {
+		this.assignmentsHolder.loadCompleteStateFromServer()
+		this.filterHolder.loadFromServer()
+	}
+
+	applyFilter(idx: number) {
+		let filterToApply = this.filterHolder.filters$().at(idx)
+		if(filterToApply == undefined){
+			console.error(`Filter no. ${idx} not found`)
+			return
+		}
+		if (this.selectedReport == undefined || this.selectedReport.year == null || this.selectedReport.month == null){
+			console.error(`Cannot apply filter because seleted report is undefined`)
+			return
+		}
+
+		for (let entry of this.selectedReport.entries){
+			if(entry.subject == null) continue;
+			if(entry.subject.match(filterToApply.subject_substring) != null){
+				this.assignmentsHolder.setAssignment(
+					{
+						year: this.selectedReport.year,
+						month: this.selectedReport.month,
+						entryId: entry.id
+					},
+					filterToApply.lane_id
+				)
+			}
+		}
+
+		this.reportDragDropLane.loadReportLanes()
+	}
+
+	applyAllFilters() {
+		this.filterHolder.filters$()
+			.forEach((filter, i)=>{
+				this.applyFilter(i)
+			})
+	}
+
+	newFilter() {
+		this.filterHolder.addFilter({subject_substring: '', lane_id: -1});
+	}
 
 	setSelectedReport(report: Report){
 		this.selectedReport = report
 		this.reportDragDropLane.loadReportLanes(report)
 	}
 
-
-	ngOnInit(): void {
-		this.assignmentsHolder.loadCompleteStateFromServer()
-	}
-
 	openNewLaneDialogClick(){
 		this.newLaneDialogVisible = true
+	}
+
+	openFiltersDialogClick(){
+		this.newFilterDialogVisible = true
 	}
 
 	createDashboardClick(){

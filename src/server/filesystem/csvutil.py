@@ -5,6 +5,17 @@ from typing import List
 from src.server.domain.LaneEntryAssignment import LaneEntryAssignment
 from src.server.domain.Lane import Lane
 from src.server.domain.Entry import Entry
+from src.server.domain.Filter import Filter
+
+def write_filters_to_csv(path: str, filters: list[Filter])->List[Filter]:
+	written_filters = []
+	with open(path, mode="w", newline="", encoding="utf-8") as csvfile:
+		writer = csv.writer(csvfile)
+		writer.writerow(["lane_id", "subject_substring"])
+		for filter in filters:
+			writer.writerow([filter.lane_id, filter.subject_substring])
+			written_filters.append(filter)
+	return written_filters
 
 def write_lanes_to_csv(path: str, lanes: list[Lane])->List[Lane]:
 	written_lanes = []

@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import plotly.express as px 
 import pandas as pd
 
 from src.server.core.workflow import get_lane_entry_assignments, get_lanes, get_reports
@@ -53,16 +54,39 @@ def create_dashboard():
 
 	fig = go.Figure()
 
-	# Each category is a separate bar series
-	for category in df_pivot.columns:
+		
+
+	# Dynamically assign colors per category
+	category_list = list(df_pivot.columns)
+	palette = px.colors.qualitative.Plotly  # well distinguishable colors
+	colors = {cat: palette[i % len(palette)] for i, cat in enumerate(category_list)}
+
+	# Plot positive and negative bars per category with the same color
+	for category in category_list:
+		pos_values = df_pivot[category].clip(lower=0)
+		neg_values = df_pivot[category].clip(upper=0)
+
+		# Positive bar
 		fig.add_trace(go.Bar(
 			x=[f"{year}-{month:02d}" for year, month in df_pivot.index],
-			y=df_pivot[category],
-			name=category
+			y=pos_values,
+			name=category,
+			marker_color=colors[category],
+			legendgroup=category
+		))
+
+		# Negative bar
+		fig.add_trace(go.Bar(
+			x=[f"{year}-{month:02d}" for year, month in df_pivot.index],
+			y=neg_values,
+			name=category,
+			marker_color=colors[category],
+			legendgroup=category,
+			showlegend=False
 		))
 
 	fig.update_layout(
-		barmode='stack',
+		barmode='relative',  # stack positives up, negatives down
 		title="Monthly Payments by Category",
 		xaxis_title="Month",
 		yaxis_title="Total Payments",
@@ -70,5 +94,4 @@ def create_dashboard():
 	)
 
 	html_str = fig.to_html(full_html=True, include_plotlyjs='cdn')
-
 	return html_str

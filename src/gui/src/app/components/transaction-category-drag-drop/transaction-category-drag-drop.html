@@ -6,10 +6,12 @@
 		<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
 			<h2>
 				{{ddlane.lane.name}}
-				<button pButton
-					(click)="onClickRemoveLane(ddlane)">
-					<i class="pi pi-trash" pButtonIcon></i>
-				</button>
+				@if(ddlane.lane.id != unassignedLane.id){
+					<button pButton
+						(click)="onClickRemoveLane(ddlane)">
+						<i class="pi pi-trash" pButtonIcon></i>
+					</button>
+				}
 			</h2>
 			<div
 				cdkDropList
@@ -18,13 +20,23 @@
 				(cdkDropListDropped)="drop($event, ddlane)"
 				style="flex: 1; display: flex; flex-direction: column;">
 				@for (item of ddlane.entries; track item) {
-					<div class="example-box" 
-						cdkDrag 
-						[cdkDragData]="item">
-						{{item != undefined ? item.amount : "NA"}}
-						<br>
-						{{item != undefined ? item.subject : "NA"}}
-					</div>
+					@if (item != undefined){
+						<div class="example-box" 
+							cdkDrag 
+							[cdkDragData]="item">
+							{{item.kind}} - {{item.date}}
+							<br>
+							{{item.amount}} €
+							<br>
+							{{item.subject}}
+						</div>
+					} @else {
+						<div class="example-box" 
+							cdkDrag 
+							[cdkDragData]="item">
+							Unable to read payment
+						</div>
+					}
 				}
 			</div>
 		</div>

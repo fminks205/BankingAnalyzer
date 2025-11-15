@@ -7,3 +7,15 @@ GET http://127.0.0.1:8000/reports
 ###
 
 GET http://127.0.0.1:8000/lanes
+
+###
+
+GET http://127.0.0.1:8000/lanes-entry-assignments
+
+###
+
+GET http://127.0.0.1:8000/filter
+
+###
+
+GET http://127.0.0.1:8000/dashboard

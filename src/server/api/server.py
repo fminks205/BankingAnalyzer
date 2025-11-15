@@ -1,19 +1,22 @@
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from src.server.core.workflow import init_lane_file
-from src.server.api.api import create_endpoints
-
+from api.API import API
 
 HOST = "127.0.0.1"
 PORT = 8000
 
 if __name__ == "__main__":
-	init_lane_file()
-
 	app = FastAPI()
-	create_endpoints(app)
+
+	api = API()
+	api.create_endpoints(app)
 
 	app.add_middleware(
 		CORSMiddleware,

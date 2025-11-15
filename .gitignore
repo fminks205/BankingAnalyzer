@@ -4,3 +4,4 @@ resources/
 build/
 persistence/
 src/gui/src/app/client/**
+*.egg-info/

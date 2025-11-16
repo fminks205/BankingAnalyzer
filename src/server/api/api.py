@@ -44,33 +44,33 @@ class API:
 		
 		@app.get("/lanes", response_model=List[Lane], operation_id="get_lanes")
 		def get_lanes_request():
-			return self.persistence.get_lanes()
+			return self.persistence.read_lanes()
 
 		@app.post("/lanes", response_model=List[Lane], operation_id="post_lanes")
 		def post_lanes_request(lanes: List[Lane]):
-			return self.persistence.post_lanes(lanes)
+			return self.persistence.save_lanes(lanes)
 		
 		@app.get("/lanes-entry-assignments", response_model=List[LaneEntryAssignment], operation_id="get_lane_entry_assignments")
 		def post_lanes_request():
-			return self.persistence.get_lane_entry_assignments()
+			return self.persistence.read_lane_entry_assignments()
 		
 		@app.post("/lanes-entry-assignments", response_model=List[LaneEntryAssignment], operation_id="post_lane_entry_assignments")
 		def post_lanes_request(assignments: List[LaneEntryAssignment]):
-			return self.persistence.post_lane_entry_assignments(assignments)
+			return self.persistence.save_lane_entry_assignments(assignments)
 		
 		@app.get("/filter", response_model=List[Filter], operation_id="get_filter")
 		def get_filter_request():
-			return self.persistence.get_filter()
+			return self.persistence.read_filters()
 		
 		@app.post("/filter", response_model=List[Filter], operation_id="post_filter")
 		def post_filter_request(filters: List[Filter]):
-			return self.persistence.post_filter(filters)
+			return self.persistence.save_filters(filters)
 		
 		@app.get("/dashboard", response_class=HTMLResponse, operation_id="get_dashboard")
 		def dashboard():
 			html_str = self.dashboard_creator.create_dashboard(
-				self.persistence.get_lane_entry_assignments(),
-				self.persistence.get_lanes(),
+				self.persistence.read_lane_entry_assignments(),
+				self.persistence.read_lanes(),
 				self.persistence.get_reports()
 			)
 			return HTMLResponse(content=html_str)

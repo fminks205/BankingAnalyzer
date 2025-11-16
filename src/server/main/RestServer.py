@@ -7,13 +7,14 @@ import uvicorn
 
 from api.API import API
 
-HOST = "127.0.0.1"
-PORT = 8000
-
 if __name__ == "__main__":
 	api = API()
+	app = api.app
+	
+	HOST = "127.0.0.1"
+	PORT = 8000
 	uvicorn.run(
-		api.app, 
+		app, 
 		host=f"{HOST}", 
 		port=PORT
 	)

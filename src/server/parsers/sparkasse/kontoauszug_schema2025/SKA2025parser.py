@@ -1,8 +1,8 @@
 import re
 from typing import List
 
-from src.server.domain.Entry import Entry
-from src.server.domain.EntryRawText import EntryRawText
+from domain.Entry import Entry
+from domain.EntryRawText import EntryRawText
 
 # Bank statement parser for the format Sparkassen Kontoauszug 2025 
 class SKA2025parser:

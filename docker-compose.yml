@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  bank-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bank-analyzer:latest
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+    restart: unless-stopped

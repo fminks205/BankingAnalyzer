@@ -65,7 +65,12 @@ class DashboardCreator:
 			title="Monthly Payments by Category",
 			xaxis_title="Month",
 			yaxis_title="Total Payments",
-			template="plotly_white"
+			template="plotly_dark",
+			xaxis=dict(
+				tickmode='array',
+				tickvals=[f"{year}-{month:02d}" for year, month in df_pivot.index],
+				ticktext=[f"{year}-{month:02d}" for year, month in df_pivot.index],
+			)
 		)
 
 		html_str = fig.to_html(full_html=True, include_plotlyjs='cdn')

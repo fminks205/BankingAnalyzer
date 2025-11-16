@@ -1,14 +1,23 @@
 <p-toolbar>
-	<ng-template #start>
-		<button pButton (click)="openNewLaneDialogClick()" label="Add Lane"></button>
-		<button pButton (click)="openFiltersDialogClick()" label="Add Filter"></button>
-	</ng-template>
-	<ng-template #center>
-		<button pButton (click)="onClickSave()" label="Save Assignments"></button>
-	</ng-template>
-	<ng-template #end>
-		<button pButton (click)="createDashboardClick()" label="Create dashboard"></button>
-	</ng-template>
+  <div class="toolbar-flex">
+        <div class="toolbar-section start">
+            <button pButton (click)="openUploadReportsDialogClick()" label="Upload Reports"></button>
+            <span class="pi pi-arrow-right"></span>
+            <button pButton (click)="openProcessReportsDialogClick()" label="Process Reports"></button>
+            <span class="pi pi-arrow-right"></span>
+            <button pButton (click)="openNewLaneDialogClick()" label="Add Lane"></button>
+            <span class="pi pi-arrow-right"></span>
+            <button pButton (click)="openFiltersDialogClick()" label="Filter"></button>
+        </div>
+
+        <div class="toolbar-section center">
+            <button pButton (click)="onClickSave()" label="Save Assignments"></button>
+        </div>
+
+        <div class="toolbar-section end">
+            <button pButton (click)="createDashboardClick()" label="Create dashboard"></button>
+        </div>
+  </div>
 </p-toolbar>
 
 <div class="flex gap-2 overflow-x-auto p-2 border-round surface-100">
@@ -27,6 +36,26 @@
 	[hidden]="selectedReport == undefined"
 	[report]="selectedReport ?? {year: -1, month: -1, entries: []}"
 ></app-transaction-category-drag-drop>
+
+<p-dialog header="Upload Reports" [modal]="true" [(visible)]="uploadReportsDialogVisible" [style]="{ width: '30rem' }">
+	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
+		<span class="p-text-secondary block mb-4 text-center">Upload Reports</span>
+		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
+			<p-button label="Cancel" severity="secondary" (click)="uploadReportsDialogVisible = false" />
+			<p-button label="Save" (click)="uploadReportsDialogVisible = false" />
+		</div>
+	</div>
+</p-dialog>
+
+<p-dialog header="Process Reports" [modal]="true" [(visible)]="processReportsDialogVisible" [style]="{ width: '30rem' }">
+	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
+		<span class="p-text-secondary block mb-4 text-center">Process Reports</span>
+		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
+			<p-button label="Cancel" severity="secondary" (click)="processReportsDialogVisible = false" />
+			<p-button label="Request Processing" (click)="processReportsDialogVisible = false; workflowService.parse_reports()" />
+		</div>
+	</div>
+</p-dialog>
 
 <p-dialog header="Add Lane" [modal]="true" [(visible)]="newLaneDialogVisible" [style]="{ width: '30rem' }">
 	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
@@ -125,7 +154,7 @@
         </p-button>
         <p-button 
             label="Save"
-            (click)="filterHolder.save()">
+            (click)="filterHolder.save(); newFilterDialogVisible = false">
         </p-button>
     </div>
 

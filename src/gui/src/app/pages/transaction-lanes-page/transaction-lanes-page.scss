@@ -1,0 +1,23 @@
+.toolbar-flex {
+  display: flex;
+  width: 100%;
+}
+
+.toolbar-section {
+  flex: 1; /* Equal space for left, center, right */
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-section.start {
+  justify-content: flex-start; /* Buttons left-aligned */
+  gap: 0.5rem; /* Spacing between buttons */
+}
+
+.toolbar-section.center {
+  justify-content: center; /* Button centered in its section */
+}
+
+.toolbar-section.end {
+  justify-content: flex-end; /* Button right-aligned */
+}

@@ -11,6 +11,7 @@ import { Report } from '../../client/openapi';
 import { Select } from 'primeng/select';
 import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
 import { FilterHolder } from '../../service/filter-holder/filter-holder';
+import { Workflow } from '../../service/workflow/workflow';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
@@ -32,6 +33,10 @@ export class TransactionLanesPage implements OnInit{
 	@ViewChild(TransactionCategoryDragDrop)
 	reportDragDropLane!: TransactionCategoryDragDrop
 
+	uploadReportsDialogVisible = false
+
+	processReportsDialogVisible = false
+
 	newFilterDialogVisible = false;
 	categoryOptions = [
 		{ name: 'Category A', id: 1 },
@@ -48,7 +53,8 @@ export class TransactionLanesPage implements OnInit{
 	constructor(
 		public assignmentsHolder: TxLaneAssignmentHolder,
 		public dashboardCreator: DashboardCreator,
-		public filterHolder: FilterHolder
+		public filterHolder: FilterHolder,
+		public workflowService: Workflow
 	){
 		effect(()=>{
 			this.categoryOptions = this.assignmentsHolder.lanes$()
@@ -102,6 +108,14 @@ export class TransactionLanesPage implements OnInit{
 	setSelectedReport(report: Report){
 		this.selectedReport = report
 		this.reportDragDropLane.loadReportLanes(report)
+	}
+
+	openUploadReportsDialogClick(){
+		this.uploadReportsDialogVisible = true
+	}
+
+	openProcessReportsDialogClick(){
+		this.processReportsDialogVisible = true
 	}
 
 	openNewLaneDialogClick(){

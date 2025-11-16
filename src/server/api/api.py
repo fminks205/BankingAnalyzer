@@ -1,4 +1,6 @@
 from fastapi.responses import HTMLResponse
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from typing import List
 
@@ -13,11 +15,24 @@ from domain.Report import Report
 
 class API:
 	def __init__(self):
+		self.app = FastAPI()
+
+		self.create_endpoints()
+
+		self.app.add_middleware(
+			CORSMiddleware,
+			allow_origins=["*"],
+			allow_methods=["*"],
+			allow_headers=["*"],
+		)
+
 		self.persistence: Persistence = Persistence()
-		self.workflow: Workflow = Workflow()
+		self.workflow: Workflow = Workflow(self.persistence)
 		self.dashboard_creator: DashboardCreator = DashboardCreator()
 
-	def create_endpoints(self, app):
+	def create_endpoints(self):
+		app = self.app
+
 		@app.get("/reports", response_model=List[Report], operation_id="get_reports")
 		def get_reports_requests():
 			return self.persistence.get_reports()

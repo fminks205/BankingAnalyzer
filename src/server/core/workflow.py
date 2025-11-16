@@ -6,8 +6,8 @@ from parsers.sparkasse.kontoauszug_schema2025.SKA2025parser import SKA2025parser
 
 
 class Workflow:
-	def __init__(self):
-		self.persistence = Persistence()
+	def __init__(self, persistence: Persistence):
+		self.persistence = persistence
 		self.file_paths_config = FilePathsConfig()
 		self.parser = SKA2025parser()
 	

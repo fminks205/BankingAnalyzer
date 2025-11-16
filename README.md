@@ -2,7 +2,7 @@
 
 Start server
 ```shell
-py -m src.server.api.server
+py -m src.server.main.server
 ```
 
 Start gui
@@ -19,7 +19,7 @@ npm run start
 
 Create openapi.yml
 ```shell
-py -m src.server.api.openapiExport
+py -m src.server.main.openapiExport
 ```
 
 Create angular client from openapi.yml

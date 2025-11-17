@@ -9,7 +9,11 @@ export class Workflow {
     private client: DefaultService
   ){}
 
-  parse_reports(){
+  uploadFiles(files: File[]){
+    return this.client.postReportFiles(files)
+  }
+
+  parseReports(){
     this.client.rebuildCsv()
       .subscribe({
         next:()=>{

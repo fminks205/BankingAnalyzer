@@ -21,3 +21,78 @@
 .toolbar-section.end {
   justify-content: flex-end; /* Button right-aligned */
 }
+
+/* Enlarge the drop area */
+.big-dropzone .p-fileupload-content {
+    min-height: 12rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--surface-border, #6b7280); /* adapts to dark/light */
+    border-radius: 12px;
+    background-color: var(--surface-ground, #1f2937); /* dark mode friendly */
+    position: relative;
+    color: var(--text-color, #f9fafb); /* ensures instructions are visible */
+}
+
+/* Subtle PDF icon in the background */
+.big-dropzone .p-fileupload-content::before {
+    content: "\f1c1"; /* Font Awesome PDF icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 4rem;
+    color: var(--text-color, #6b7280);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.05; /* subtle watermark */
+    pointer-events: none;
+}
+
+/* Make the file list span full width of the upload area */
+.big-dropzone .p-fileupload-file-list {
+    width: 100%;       /* full width of container */
+    max-width: 100%;   /* prevent it from shrinking */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;      /* optional spacing between items */
+}
+
+.big-dropzone .p-fileupload-file {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem; /* spacing between flex children */
+}
+
+/* Thumbnail: relative width 2 */
+.big-dropzone .p-fileupload-file-thumbnail {
+    flex: 2 1 0;  /* flex-grow:2, flex-shrink:1, flex-basis:0 */
+    max-width: 20%; /* optional max width for thumbnails */
+    display: flex;
+    justify-content: center;
+}
+
+/* File info: relative width 5 */
+.big-dropzone .p-fileupload-file-info {
+    flex: 5 1 0; /* grow:5 relative to thumbnail */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* File badge: relative width 1 */
+.big-dropzone .p-fileupload-file-badge {
+    flex: 1 0 auto; /* shrink as needed */
+    display: flex;
+    justify-content: center;
+}
+
+/* File actions (delete etc): relative width 1 */
+.big-dropzone .p-fileupload-file-actions {
+    flex: 1 0 auto; 
+    display: flex;
+    justify-content: center;
+}

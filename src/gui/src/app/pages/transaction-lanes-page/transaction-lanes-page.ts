@@ -12,19 +12,23 @@ import { Select } from 'primeng/select';
 import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
 import { FilterHolder } from '../../service/filter-holder/filter-holder';
 import { Workflow } from '../../service/workflow/workflow';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-transaction-lanes-page',
 	imports: [
-    TransactionCategoryDragDrop,
-    DialogModule,
-    ButtonModule,
-    FloatLabel,
-    InputTextModule,
-	Select,
-    FormsModule,
-    Toolbar,
-],
+		CommonModule,
+		TransactionCategoryDragDrop,
+		DialogModule,
+		ButtonModule,
+		FloatLabel,
+		InputTextModule,
+		Select,
+		FormsModule,
+		Toolbar,
+		FileUploadModule,
+	],
 	templateUrl: './transaction-lanes-page.html',
 	styleUrl: './transaction-lanes-page.scss',
 	encapsulation: ViewEncapsulation.None
@@ -33,7 +37,11 @@ export class TransactionLanesPage implements OnInit{
 	@ViewChild(TransactionCategoryDragDrop)
 	reportDragDropLane!: TransactionCategoryDragDrop
 
+	@ViewChild('pdfUpload') 
+	pdfUpload!: FileUpload;
+
 	uploadReportsDialogVisible = false
+	fileNamesSavedInServer: string[] = []
 
 	processReportsDialogVisible = false
 
@@ -65,6 +73,19 @@ export class TransactionLanesPage implements OnInit{
 		this.assignmentsHolder.loadCompleteStateFromServer()
 		this.filterHolder.loadFromServer()
 	}
+
+	onPdfUpload(event: any) {
+		const files: File[] = event.files;
+
+		this.workflowService.uploadFiles(files)
+			.subscribe({
+				next: ()=>{
+					this.pdfUpload.clear()
+					console.log("Done uploading pdfs")
+				}
+			})
+	}
+
 
 	applyFilter(idx: number) {
 		let filterToApply = this.filterHolder.filters$().at(idx)

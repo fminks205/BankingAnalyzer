@@ -1,3 +1,4 @@
+from fastapi import UploadFile
 from core.Persistence import Persistence
 from domain.Entry import Entry
 from domain.Report import Report
@@ -10,6 +11,10 @@ class Workflow:
 		self.persistence = persistence
 		self.pdf_handler = PdfFileHandler()
 		self.parser = SKA2025parser()
+
+	async def save_report_pdf(self,reportPdfs: list[UploadFile]):
+		for file in reportPdfs:
+			await self.pdf_handler.save_report_pdf(file)
 	
 	def rebuild_csv_files(self):
 		src_pdfs = self.pdf_handler.find_pdf_files()

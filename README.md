@@ -4,10 +4,6 @@
 docker-compose up --build
 ```
 
-```shell
-docker build --target frontend-build -t frontend-build .
-```
-
 ## Development
 
 ### Start server

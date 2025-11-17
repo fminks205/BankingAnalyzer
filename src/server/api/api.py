@@ -1,5 +1,5 @@
 from fastapi.responses import HTMLResponse
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from typing import List
@@ -32,6 +32,12 @@ class API:
 
 	def create_endpoints(self):
 		app = self.app
+
+		@app.post("/report_files", response_model=str, operation_id="post_report_files")
+		async def upload_pdfs(files: list[UploadFile]):
+			print(f"POST {len(files)} report pdfs to save")
+			await self.workflow.save_report_pdf(files)
+			return "files successfully uploaded"
 
 		@app.get("/reports", response_model=List[Report], operation_id="get_reports")
 		def get_reports_requests():

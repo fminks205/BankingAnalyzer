@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import yaml
 from fastapi.openapi.utils import get_openapi
 
-from api.API import API
+from api.api import API
 
 def write_openapi_yaml(path: str):
     api = API()

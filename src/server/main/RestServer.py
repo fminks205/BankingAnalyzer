@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import uvicorn
 
-from api.API import API
+from api.api import API
 
 if __name__ == "__main__":
 	api = API()

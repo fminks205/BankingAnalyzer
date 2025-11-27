@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 
 from core.Persistence import Persistence
-from core.Workflow import Workflow
-from core.DashboardCreator import DashboardCreator
+from core.workflow import Workflow
+from core.dashboardCreator import DashboardCreator
 from domain.Filter import Filter
 from domain.Lane import Lane
 from domain.LaneEntryAssignment import LaneEntryAssignment

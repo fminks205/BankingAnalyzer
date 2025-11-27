@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from fastapi.staticfiles import StaticFiles
 
-from api.API import API
+from api.api import API
 
 root_dir = "/app" 
 for dirpath, dirnames, filenames in os.walk(root_dir):

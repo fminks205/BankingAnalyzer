@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": ["src/server"],
+    "python.autoComplete.extraPaths": ["src/server"],
+    "python.testing.pytestArgs": ["tests/server"]
+}

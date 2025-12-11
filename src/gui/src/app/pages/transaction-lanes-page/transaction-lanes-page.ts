@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, effect, OnInit, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
@@ -41,7 +41,7 @@ export class TransactionLanesPage implements OnInit{
 	pdfUpload!: FileUpload;
 
 	uploadReportsDialogVisible = false
-	fileNamesSavedInServer: string[] = []
+	fileNamesSavedInServer: WritableSignal<string[]> = signal([])
 
 	processReportsDialogVisible = false
 
@@ -72,6 +72,17 @@ export class TransactionLanesPage implements OnInit{
 	ngOnInit(): void {
 		this.assignmentsHolder.loadCompleteStateFromServer()
 		this.filterHolder.loadFromServer()
+		this.loadPdfsUploaded()
+	}
+
+	loadPdfsUploaded(){
+		this.workflowService.listUploadedFiles()
+			.subscribe({
+				next: (res)=>{
+					console.debug(`Received ${res.length} file names from server`)
+					this.fileNamesSavedInServer.set(res)
+				}
+			})
 	}
 
 	onPdfUpload(event: any) {
@@ -82,6 +93,7 @@ export class TransactionLanesPage implements OnInit{
 				next: ()=>{
 					this.pdfUpload.clear()
 					console.log("Done uploading pdfs")
+					this.loadPdfsUploaded()
 				}
 			})
 	}

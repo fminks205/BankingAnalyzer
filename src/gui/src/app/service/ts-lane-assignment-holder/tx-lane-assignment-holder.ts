@@ -26,6 +26,27 @@ export class TxLaneAssignmentHolder{
 	){	
 	}
 
+	listUploadedFiles(){
+    	return this.client.getReportFileNames()
+	}
+
+	uploadFiles(files: File[]){
+		return this.client.postReportFiles(files)
+	}
+
+	parseReports(){
+		this.client.rebuildCsv()
+		.subscribe({
+			next:()=>{
+				console.info("Sucessfully parsed reports to csv")
+				this.loadReportsFromServer()
+			},
+			error: (err)=>{
+				console.info(`Parsing reports to csv failed: ${JSON.stringify(err)}`)
+			}
+		})
+	}
+
 	loadCompleteStateFromServer(){
 		this.loadLanesFromServer()
 		this.loadReportsFromServer()

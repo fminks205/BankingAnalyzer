@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi.responses import HTMLResponse
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,6 +39,13 @@ class API:
 			print(f"POST {len(files)} report pdfs to save")
 			await self.workflow.save_report_pdf(files)
 			return "files successfully uploaded"
+		
+		@app.get("/report_file_names", response_model=list[str], operation_id="get_report_file_names")
+		async def list_pdfs():
+			print(f"GET request for saved pdfs")
+			report_file_paths = self.workflow.pdf_handler.find_pdf_files()
+			report_file_names = [Path(path).name for path in report_file_paths]
+			return report_file_names
 
 		@app.get("/reports", response_model=List[Report], operation_id="get_reports")
 		def get_reports_requests():

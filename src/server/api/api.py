@@ -53,8 +53,8 @@ class API:
 		
 		@app.get("/reports/rebuild_csv", response_model=str, operation_id="rebuild_csv")
 		def rebuild_csv_request():
-			self.workflow.rebuild_csv_files()
-			return "successfully created csv files"
+			self.workflow.build_next_csv_file()
+			return "successfully created next csv file"
 		
 		@app.get("/lanes", response_model=List[Lane], operation_id="get_lanes")
 		def get_lanes_request():

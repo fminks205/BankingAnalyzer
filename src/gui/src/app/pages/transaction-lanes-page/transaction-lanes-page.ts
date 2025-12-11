@@ -14,6 +14,12 @@ import { FilterHolder } from '../../service/filter-holder/filter-holder';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 
+interface ParsingStatus{
+	isLoading: boolean,
+	toParse: number,
+	parsed: number
+}
+
 @Component({
 	selector: 'app-transaction-lanes-page',
 	imports: [
@@ -39,6 +45,12 @@ export class TransactionLanesPage implements OnInit{
 	@ViewChild('pdfUpload') 
 	pdfUpload!: FileUpload;
 
+	parsingStatus$: WritableSignal<ParsingStatus> = signal({
+		isLoading: false,
+		toParse: 0,
+		parsed: 0
+	})
+
 	uploadReportsDialogVisible = false
 	fileNamesSavedInServer: WritableSignal<string[]> = signal([])
 
@@ -62,6 +74,7 @@ export class TransactionLanesPage implements OnInit{
 		public dashboardCreator: DashboardCreator,
 		public filterHolder: FilterHolder,
 	){
+		this.wireParsingStatus()
 		effect(()=>{
 			this.categoryOptions = this.assignmentsHolder.lanes$()
 		})
@@ -168,5 +181,61 @@ export class TransactionLanesPage implements OnInit{
 	onClickAddLane(name: string, description: string){
 		this.assignmentsHolder.addLane(name, description)
 		this.reportDragDropLane.loadReportLanes()
+	}
+
+	parseRemainingFilesToCsv(){
+		this.parsingStatus$.set({
+			isLoading: true,
+			parsed: 0,
+			toParse: this.fileNamesSavedInServer().length - this.assignmentsHolder.getReports().length
+		})
+	}
+
+	wireParsingStatus(){
+		effect(()=>{
+			let status = this.parsingStatus$()
+			if(status.isLoading == false) return
+			if(status.toParse <= status.parsed){
+				this.parsingStatus$.set({
+					isLoading: false,
+					parsed: 0,
+					toParse: 0
+				})
+				return
+			}
+			this.assignmentsHolder.requestToParseNextReport()
+				.subscribe({
+					next:()=>{
+						console.info("Sucessfully parsed report to csv")
+						this.assignmentsHolder.loadReportsFromServer()
+							.subscribe({
+								next: ()=>{
+									let oldStatus = this.parsingStatus$()
+									let newStatus: ParsingStatus = {
+										isLoading: true,
+										toParse: oldStatus.toParse,
+										parsed: oldStatus.parsed + 1
+									}
+									this.parsingStatus$.set(newStatus)
+								}
+							})
+					},
+					error: (err)=>{
+						console.info(`Parsing reports to csv failed: ${JSON.stringify(err)}`)
+					}
+				})
+			},
+			{
+				allowSignalWrites: true
+			}
+		)
+	}
+
+	parseNextCsvFile(){
+	
+	}
+
+	setLoadingState(){
+
 	}
 }

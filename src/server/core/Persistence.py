@@ -41,7 +41,8 @@ class Persistence:
 			print("Filter file does not exist yet, initalizing...")
 			self.save_filters([])
 
-	def _find_csv_files(self, directory: str) -> List[str]:
+	def _find_report_csv_files(self) -> List[str]:
+		directory = self.file_config.get_kontoauszug_csv_root()
 		results = []
 		for root, _, files in os.walk(directory):
 			for file in files:
@@ -122,7 +123,7 @@ class Persistence:
 	# --- Reports ---
 
 	def get_reports(self) -> list[Report]:
-		files = self._find_csv_files(self.file_config.get_kontoauszug_csv_root())
+		files = self._find_report_csv_files()
 		reports = []
 		for file in files:
 			metadata = self._read_csv_metadata(file)

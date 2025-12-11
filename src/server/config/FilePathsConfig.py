@@ -5,7 +5,7 @@ class FilePathsConfig:
 		return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'Kontoauszuege'))
 	
 	def get_kontoauszug_pdfs_root_dir_relative(self):
-		return "resources/Kontoauszuege"
+		return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','resources' ,'Kontoauszuege'))
 	
 	def get_lane_file_path(self):
 		return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..','persistence' ,'lanes', 'lanes.csv'))

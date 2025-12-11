@@ -1,6 +1,7 @@
 import { Injectable, OnInit, signal, WritableSignal, WritableSignal as WritableSignal$ } from '@angular/core';
 import { DefaultService, Lane, Report, LaneEntryAssignment } from '../../client/openapi';
 import { AssignmentKeyManager } from '../assignment-key-manager/assignment-key-manager';
+import { tap } from 'rxjs';
 
 /**
  * All the information needed to identify a report entry
@@ -34,22 +35,14 @@ export class TxLaneAssignmentHolder{
 		return this.client.postReportFiles(files)
 	}
 
-	parseReports(){
-		this.client.rebuildCsv()
-			.subscribe({
-				next:()=>{
-					console.info("Sucessfully parsed reports to csv")
-					this.loadReportsFromServer()
-				},
-				error: (err)=>{
-					console.info(`Parsing reports to csv failed: ${JSON.stringify(err)}`)
-				}
-			})
+	requestToParseNextReport(){
+		return this.client.rebuildCsv()
 	}
 
 	loadCompleteStateFromServer(){
 		this.loadLanesFromServer()
 		this.loadReportsFromServer()
+			.subscribe()
 		this.loadAssignmentsFromServer()
 	}
 
@@ -142,11 +135,11 @@ export class TxLaneAssignmentHolder{
 		return this.reports$()
 	}
 
-	private loadReportsFromServer(): void {
+	loadReportsFromServer() {
 		console.debug(`Requesting reports from server`)
-		this.client.getReports()
-			.subscribe({
-				next: (response: Report[])=>{
+		return this.client.getReports()
+			.pipe(
+				tap(response => {
 					console.debug(`Received ${response.length} reports from server`)
 					let sortedList = response.sort((a, b)=>{
 						if (a.year == null || b.year == null || a.month == null || b.month == null){
@@ -158,8 +151,8 @@ export class TxLaneAssignmentHolder{
 						return a.month - b.month
 					})
 					this.reports$.set(sortedList)
-				}
-			})
+				})
+			)
 	}
 	private loadLanesFromServer(): void {
 		console.debug(`Requesting lanes from server`)

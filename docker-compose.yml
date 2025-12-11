@@ -11,3 +11,6 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
     restart: unless-stopped
+    # volumes:
+      # - "C:/My/BankStatements:/persistence" <- Your bank statement pdfs are stored here
+      # - "C:/My/Processed/Data:/resources" <- All processed data is saved here

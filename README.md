@@ -1,8 +1,19 @@
+# Bankalyzer
+
 ## Usage
+
+To run this web app simply run:
 
 ```shell
 docker-compose up --build
 ```
+
+If you want to persist the containers data on your machine uncomment the volume statements in the `docker.compose.yml`.
+
+
+
+
+
 
 ## Development
 

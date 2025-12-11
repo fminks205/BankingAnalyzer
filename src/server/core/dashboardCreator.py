@@ -73,7 +73,7 @@ class DashboardCreator:
 			)
 		)
 
-		html_str = fig.to_html(full_html=True, include_plotlyjs='cdn')
+		html_str = fig.to_html(full_html=True, include_plotlyjs=True)
 		return html_str
 
 	def parse_float(self, value: str | float | int) -> float:

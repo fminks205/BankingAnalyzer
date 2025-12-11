@@ -36,15 +36,15 @@ export class TxLaneAssignmentHolder{
 
 	parseReports(){
 		this.client.rebuildCsv()
-		.subscribe({
-			next:()=>{
-				console.info("Sucessfully parsed reports to csv")
-				this.loadReportsFromServer()
-			},
-			error: (err)=>{
-				console.info(`Parsing reports to csv failed: ${JSON.stringify(err)}`)
-			}
-		})
+			.subscribe({
+				next:()=>{
+					console.info("Sucessfully parsed reports to csv")
+					this.loadReportsFromServer()
+				},
+				error: (err)=>{
+					console.info(`Parsing reports to csv failed: ${JSON.stringify(err)}`)
+				}
+			})
 	}
 
 	loadCompleteStateFromServer(){
@@ -146,9 +146,18 @@ export class TxLaneAssignmentHolder{
 		console.debug(`Requesting reports from server`)
 		this.client.getReports()
 			.subscribe({
-				next: (response)=>{
+				next: (response: Report[])=>{
 					console.debug(`Received ${response.length} reports from server`)
-					this.reports$.set(response)
+					let sortedList = response.sort((a, b)=>{
+						if (a.year == null || b.year == null || a.month == null || b.month == null){
+							return 0
+						}
+						if (a.year != b.year){
+							return a.year - b.year
+						}
+						return a.month - b.month
+					})
+					this.reports$.set(sortedList)
 				}
 			})
 	}

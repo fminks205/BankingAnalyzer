@@ -11,7 +11,6 @@ import { Report } from '../../client/openapi';
 import { Select } from 'primeng/select';
 import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
 import { FilterHolder } from '../../service/filter-holder/filter-holder';
-import { Workflow } from '../../service/workflow/workflow';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 
@@ -62,7 +61,6 @@ export class TransactionLanesPage implements OnInit{
 		public assignmentsHolder: TxLaneAssignmentHolder,
 		public dashboardCreator: DashboardCreator,
 		public filterHolder: FilterHolder,
-		public workflowService: Workflow
 	){
 		effect(()=>{
 			this.categoryOptions = this.assignmentsHolder.lanes$()
@@ -76,9 +74,9 @@ export class TransactionLanesPage implements OnInit{
 	}
 
 	loadPdfsUploaded(){
-		this.workflowService.listUploadedFiles()
+		this.assignmentsHolder.listUploadedFiles()
 			.subscribe({
-				next: (res)=>{
+				next: (res: string[])=>{
 					console.debug(`Received ${res.length} file names from server`)
 					this.fileNamesSavedInServer.set(res)
 				}
@@ -88,7 +86,7 @@ export class TransactionLanesPage implements OnInit{
 	onPdfUpload(event: any) {
 		const files: File[] = event.files;
 
-		this.workflowService.uploadFiles(files)
+		this.assignmentsHolder.uploadFiles(files)
 			.subscribe({
 				next: ()=>{
 					this.pdfUpload.clear()

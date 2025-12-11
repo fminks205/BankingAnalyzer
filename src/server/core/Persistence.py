@@ -14,6 +14,7 @@ class Persistence:
 	def __init__(self):
 		self.file_config = FilePathsConfig()
 
+		self.bank_statements_csv_path = self.file_config.get_kontoauszug_csv_root()
 		self.lanes_path = self.file_config.get_lane_file_path()
 		self.assignments_path = self.file_config.get_lane_entry_assignments_file_path()
 		self.filter_path = self.file_config.get_filter_file_path()
@@ -27,6 +28,9 @@ class Persistence:
 			if parent_dir:
 				os.makedirs(parent_dir, exist_ok=True)
 
+		if not os.path.isfile(self.bank_statements_csv_path):
+			print("Csv folder does not exist yet, initalizing...")
+			os.makedirs(self.bank_statements_csv_path, exist_ok=True)
 		if not os.path.isfile(self.lanes_path):
 			print("Lanes file does not exist yet, initalizing...")
 			self.save_lanes([])

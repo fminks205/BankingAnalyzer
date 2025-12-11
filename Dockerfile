@@ -53,16 +53,9 @@ RUN npx ng build --configuration=production --output-path=/app/frontend/dist
 # =====================
 # Stage 3: Final image (Python backend + Angular static files)
 # =====================
-FROM python:3.12-slim AS final
+FROM backend-build as final
 
 WORKDIR /app
-
-# Install backend deps
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy backend source
-COPY --from=backend-build /app/server/ /app/server/
 
 # Copy Angular production build from frontend stage
 COPY --from=frontend-build /app/frontend/dist/browser/ /app/server/public/

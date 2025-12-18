@@ -1,6 +1,6 @@
 import { Injectable, OnInit, signal, WritableSignal, WritableSignal as WritableSignal$ } from '@angular/core';
 import { DefaultService, Lane, Report, LaneEntryAssignment } from '../../client/openapi';
-import { AssignmentKeyManager } from '../assignment-key-manager/assignment-key-manager';
+import { AssignmentKeyManager } from '../filter-holder/assignment-key-manager';
 import { tap } from 'rxjs';
 
 /**
@@ -17,6 +17,8 @@ export interface TxLaneAssignmentKey{
 })
 export class TxLaneAssignmentHolder{
 
+	pdfsInServer$: WritableSignal<string[]> = signal([])
+
 	reports$: WritableSignal<Report[]> = signal([])
 	lanes$: WritableSignal<Lane[]> = signal([])
 	laneAssignments$: WritableSignal$<Map<string, number>> = signal(new Map());
@@ -26,10 +28,18 @@ export class TxLaneAssignmentHolder{
 		private keyHandler: AssignmentKeyManager
 	){	
 	}
-
-	listUploadedFiles(){
-    	return this.client.getReportFileNames()
+	
+	loadCompleteStateFromServer(){
+			this.loadLanesFromServer()
+				.subscribe()
+			this.loadReportsFromServer()
+				.subscribe()
+			this.loadAssignmentsFromServer()
+				.subscribe()
+			this.loadSavedBankStatements()
+				.subscribe()
 	}
+
 
 	uploadFiles(files: File[]){
 		return this.client.postReportFiles(files)
@@ -37,13 +47,6 @@ export class TxLaneAssignmentHolder{
 
 	requestToParseNextReport(){
 		return this.client.rebuildCsv()
-	}
-
-	loadCompleteStateFromServer(){
-		this.loadLanesFromServer()
-		this.loadReportsFromServer()
-			.subscribe()
-		this.loadAssignmentsFromServer()
 	}
 
 	saveState(){
@@ -65,12 +68,7 @@ export class TxLaneAssignmentHolder{
 		})
 	}
 
-	findLaneOfReportEntry(key: TxLaneAssignmentKey){
-		const keyStr = this.keyHandler.toKeyStr(key)
-		return this.laneAssignments$().get(keyStr)
-	}
-
-	getAllAssignmentsAsArray(){
+	getAllAssignmentsAsArray(): LaneEntryAssignment[] {
 		let assignments: LaneEntryAssignment[] = []
 		let entries = this.laneAssignments$() != undefined 
 			? this.laneAssignments$().entries() 
@@ -85,10 +83,6 @@ export class TxLaneAssignmentHolder{
 			})
 		}
 		return assignments
-	}
-
-	getLanes(){
-		return this.lanes$()
 	}
 
 	addLane(name: string, description: string){
@@ -131,8 +125,14 @@ export class TxLaneAssignmentHolder{
 		this.lanes$.set(filteredLanes)
 	}
 
-	getReports(){
-		return this.reports$()
+	loadSavedBankStatements(){
+    	return this.client.getReportFileNames()
+			.pipe(
+				tap(response => {
+					if(response == undefined) return;
+					this.pdfsInServer$.set(response)
+				})
+			)
 	}
 
 	loadReportsFromServer() {
@@ -141,43 +141,48 @@ export class TxLaneAssignmentHolder{
 			.pipe(
 				tap(response => {
 					console.debug(`Received ${response.length} reports from server`)
-					let sortedList = response.sort((a, b)=>{
-						if (a.year == null || b.year == null || a.month == null || b.month == null){
-							return 0
-						}
-						if (a.year != b.year){
-							return a.year - b.year
-						}
-						return a.month - b.month
-					})
+					let sortedList = response.sort(this.compareReportsByYearMonth)
 					this.reports$.set(sortedList)
 				})
 			)
 	}
-	private loadLanesFromServer(): void {
+
+
+	private compareReportsByYearMonth(a: Report, b: Report){
+		if (a.year == null || b.year == null || a.month == null || b.month == null){
+			return 0
+		}
+		if (a.year != b.year){
+			return a.year - b.year
+		}
+		return a.month - b.month
+	}
+
+	private loadLanesFromServer() {
 		console.debug(`Requesting lanes from server`)
-		this.client.getLanes()
-			.subscribe({
-				next: (response)=>{
+		return this.client.getLanes()
+			.pipe(
+				tap((response)=>{
 					console.debug(`Received ${response.length} lanes from server`)
 					this.lanes$.set(response)
-				}
-			})
+				})
+			)
 	}
+
 	private loadAssignmentsFromServer(){
 		console.debug("Requesting assignments from server")
-		this.client
+		return this.client
 			.getLaneEntryAssignments()
-				.subscribe({
-					next: (response)=>{
-						console.debug(`Received ${response.length} assignments from server`)
+			.pipe(
+				tap((response)=>{
+					console.debug(`Received ${response.length} assignments from server`)
 						this.setAssignmentsFromArray(
 							response != undefined
 								? response
 								: []
 						)
-					}
 				})
+			)
 	}
 
 	private saveAssignmentsToCsv(){

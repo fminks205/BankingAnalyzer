@@ -1,0 +1,21 @@
+<p-dialog 
+    [visible]="visible() ?? false"
+    [closable]="false"
+    [modal]="true" 
+    [style]="{ height: '40vh', width: '20vw' }" 
+    [contentStyle]="{ 'padding': '2rem' }">
+
+	<ng-template pTemplate="header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+            <span style="flex-grow: 1;"><h3>Parsing Reports</h3></span>
+            <button pButton icon="pi pi-times" (click)="visible.set(false)" style="margin-left: auto;"></button>
+        </div>
+    </ng-template>
+
+	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
+		<span class="p-text-secondary block mb-4 text-center">Progress:</span>
+		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
+			{{parsingStatus$().parsed}}/{{parsingStatus$().toParse}}
+		</div>
+	</div>
+</p-dialog>

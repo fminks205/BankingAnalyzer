@@ -1,44 +1,48 @@
-<h2 class="text-3xl font-bold underline">
-	Kontoauszug {{report.month}}/{{report.year}}
-</h2>
-<div cdkDropListGroup class="board-container">
-	@for(ddlane of dragDropLanes$(); track ddlane){
-		<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
-			<h2>
-				{{ddlane.lane.name}}
-				@if(ddlane.lane.id != unassignedLane.id){
-					<button pButton
-						(click)="onClickRemoveLane(ddlane)">
-						<i class="pi pi-trash" pButtonIcon></i>
-					</button>
-				}
-			</h2>
-			<div
-				cdkDropList
-				[cdkDropListData]="ddlane.entries"
-				class="example-list"
-				(cdkDropListDropped)="drop($event, ddlane)"
-				style="flex: 1; display: flex; flex-direction: column;">
-				@for (item of ddlane.entries; track item) {
-					@if (item != undefined){
-						<div class="example-box" 
-							cdkDrag 
-							[cdkDragData]="item">
-							{{item.kind}} - {{item.date}}
-							<br>
-							{{item.amount}} €
-							<br>
-							{{item.subject}}
-						</div>
-					} @else {
-						<div class="example-box" 
-							cdkDrag 
-							[cdkDragData]="item">
-							Unable to read payment
-						</div>
+@if(report() != undefined){
+	<h2 class="text-3xl font-bold underline">
+		Bank Statement {{report()?.month ?? 0}}/{{report()?.year ?? 0}}
+	</h2>
+	<div cdkDropListGroup class="board-container">
+		@for(ddlane of dragDropLanes$(); track ddlane){
+			<div class="example-container" style="flex: 1; display: flex; flex-direction: column;">
+				<h3>
+					{{ddlane.lane.name}}
+					@if(ddlane.lane.id != unassignedLane.id){
+						<button pButton
+							(click)="onClickRemoveLane(ddlane)">
+							<i class="pi pi-trash" pButtonIcon></i>
+						</button>
 					}
-				}
+				</h3>
+				<div
+					cdkDropList
+					[cdkDropListData]="ddlane.entries"
+					class="example-list"
+					(cdkDropListDropped)="drop($event, ddlane)"
+					style="flex: 1; display: flex; flex-direction: column;">
+					@for (item of ddlane.entries; track item) {
+						@if (item != undefined){
+							<div class="example-box" 
+								cdkDrag 
+								[cdkDragData]="item">
+								{{item.kind}} - {{item.date}}
+								<br>
+								{{item.amount}} €
+								<br>
+								{{item.subject}}
+							</div>
+						} @else {
+							<div class="example-box" 
+								cdkDrag 
+								[cdkDragData]="item">
+								Unable to read payment
+							</div>
+						}
+					}
+				</div>
 			</div>
-		</div>
-	}
-</div>
+		}
+	</div>
+} @else {
+	<h2>Select a Bank Statement</h2>
+}

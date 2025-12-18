@@ -1,0 +1,71 @@
+<p-dialog 
+    [visible]="visible() ?? false"
+    [closable]="false"
+    [modal]="true" 
+    [style]="{ height: '80vh', width: '80vw' }" 
+    [contentStyle]="{ 'padding': '2rem' }">
+
+    <ng-template pTemplate="header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
+            <span style="flex-grow: 1;"><h3>Upload Bank Statements</h3></span>
+            <button pButton icon="pi pi-times" (click)="visible.set(false)" style="margin-left: auto;"></button>
+        </div>
+    </ng-template>
+
+    <div class="p-fluid flex flex-col gap-6 items-center">
+        <span class="text-gray-500 text-center text-lg">
+            Press the select button or drag and drop files here
+        </span>
+
+        <p-fileUpload
+            #pdfUpload
+            name="files"
+            [customUpload]="true"
+            [auto]="false"
+            accept="application/pdf"
+            [multiple]="true"
+            [showUploadButton]="true"
+            [cancelLabel]="'Clear'"
+            [chooseLabel]="'Select PDFs'"
+            [uploadLabel]="'Upload'"
+            (uploadHandler)="onPdfUpload($event)"
+            [styleClass]="'big-dropzone'"
+            [style]="{ width: '100%' }">
+            <ng-template pTemplate="file" let-file>
+                <div class="p-fileupload-file flex w-full items-center gap-2">
+                    <i class="pi pi-file-pdf text-red-500 text-8xl flex-none"></i>
+                    <div class="p-fileupload-file-info flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
+                        {{ file.name }}
+                    </div>
+                    <div class="p-fileupload-file-badge flex-none">
+                        {{ file.size / 1024 | number:'1.0-0' }} KB
+                    </div>
+                    <div class="p-fileupload-file-actions flex-none">
+                        <button type="button" 
+                                (click)="pdfUpload.remove($event, file)" 
+                                class="p-button p-component p-button-text p-button-sm p-button-danger">
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+        </p-fileUpload>
+
+        <div class="w-full mt-4">
+            <h4 class="mb-2">Already uploaded PDFs:</h4>
+            <ul class="list-disc pl-5 max-h-40 overflow-y-auto border p-2 rounded-md bg-gray-50">
+                @for(filename of fileNamesSavedInServer(); track filename){
+                    <li>{{ filename }}</li>     
+                }
+            </ul>
+        </div>
+
+        <div class="flex justify-end w-full mt-4">
+            <p-button 
+                label="Done" 
+                severity="secondary" 
+                (click)="visible.set(false)">
+            </p-button>
+        </div>
+    </div>
+</p-dialog>

@@ -1,30 +1,20 @@
-<p-toolbar>
-  <div class="toolbar-flex">
-        <div class="toolbar-section start">
-            <button pButton (click)="openUploadReportsDialogClick()" label="Upload Reports"></button>
-            <span class="pi pi-arrow-right"></span>
-            <button pButton (click)="openProcessReportsDialogClick()" label="Process Reports"></button>
-            <span class="pi pi-arrow-right"></span>
-            <button pButton (click)="openNewLaneDialogClick()" label="Add Lane"></button>
-            <span class="pi pi-arrow-right"></span>
-            <button pButton (click)="openFiltersDialogClick()" label="Filter"></button>
-        </div>
+<app-main-workflow-toolbar
+    (onUploadReportsClick)="uploadReportsDialogVisible.set(true)"
+    (onProcessReportsClick)="processReportsDialogVisible.set(true)"
+    (onAddLaneClick)="newLaneDialogVisible.set(true)"
+    (onFiltersClick)="newFilterDialogVisible.set(true)"
 
-        <div class="toolbar-section center">
-            <button pButton (click)="onClickSave()" label="Save Assignments"></button>
-        </div>
+    (onSaveAssignmentsClick)="assignmentsHolder.saveState()"
+    (onCreateDashboardClick)="dashboardCreator.createDashboard()"
+>
+</app-main-workflow-toolbar>
 
-        <div class="toolbar-section end">
-            <button pButton (click)="createDashboardClick()" label="Create dashboard"></button>
-        </div>
-  </div>
-</p-toolbar>
 
 <div class="flex gap-2 overflow-x-auto p-2 border-round surface-100">
 	@for(report of assignmentsHolder.reports$(); track report){
 		<p-button
 			[label]="report.month + ' ' + report.year"
-			[severity]="report === selectedReport ? 'primary' : 'secondary'"
+			[severity]="report === selectedReport() ? 'primary' : 'secondary'"
 			size="small"
 			(onClick)="setSelectedReport(report)">
 		</p-button>
@@ -34,196 +24,25 @@
 
 <app-transaction-category-drag-drop
 	[hidden]="selectedReport == undefined"
-	[report]="selectedReport ?? {year: -1, month: -1, entries: []}"
+	[report]="selectedReport()"
 ></app-transaction-category-drag-drop>
 
-<p-dialog 
-    header="Upload Reports" 
-    [(visible)]="uploadReportsDialogVisible" 
-    [modal]="true" 
-    [style]="{ height: '80vh', width: '80vw' }" 
-    [contentStyle]="{ 'padding': '2rem' }">
+<app-upload-bankstatement-dialog
+    [(visible)]="uploadReportsDialogVisible"
+></app-upload-bankstatement-dialog>
 
-    <div class="p-fluid flex flex-col gap-6 items-center">
-        <span class="text-gray-500 text-center text-lg">
-            Press the select button or drag and drop files here
-        </span>
+<app-parse-reports-dialog
+    [(visible)]="processReportsDialogVisible"
+></app-parse-reports-dialog>
 
-        <p-fileUpload
-            #pdfUpload
-            name="files"
-            [customUpload]="true"
-            [auto]="false"
-            accept="application/pdf"
-            [multiple]="true"
-            [showUploadButton]="true"
-            [cancelLabel]="'Clear'"
-            [chooseLabel]="'Select PDFs'"
-            [uploadLabel]="'Upload'"
-            (uploadHandler)="onPdfUpload($event)"
-            [styleClass]="'big-dropzone'"
-            [style]="{ width: '100%' }">
-            <ng-template pTemplate="file" let-file>
-                <div class="p-fileupload-file flex w-full items-center gap-2">
-                    <i class="pi pi-file-pdf text-red-500 text-8xl flex-none"></i>
-                    <div class="p-fileupload-file-info flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
-                        {{ file.name }}
-                    </div>
-                    <div class="p-fileupload-file-badge flex-none">
-                        {{ file.size / 1024 | number:'1.0-0' }} KB
-                    </div>
-                    <div class="p-fileupload-file-actions flex-none">
-                        <button type="button" 
-                                (click)="pdfUpload.remove($event, file)" 
-                                class="p-button p-component p-button-text p-button-sm p-button-danger">
-                            <i class="pi pi-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </ng-template>
-        </p-fileUpload>
-
-        <div class="w-full mt-4">
-            <h4 class="mb-2">Already uploaded PDFs:</h4>
-            <ul class="list-disc pl-5 max-h-40 overflow-y-auto border p-2 rounded-md bg-gray-50">
-                @for(filename of fileNamesSavedInServer(); track filename){
-                    <li>{{ filename }}</li>     
-                }
-            </ul>
-        </div>
-
-        <div class="flex justify-end w-full mt-4">
-            <p-button 
-                label="Done" 
-                severity="secondary" 
-                (click)="uploadReportsDialogVisible = false">
-            </p-button>
-        </div>
-    </div>
-</p-dialog>
+<app-add-lanes-dialog
+    [(visible)]="newLaneDialogVisible"
+></app-add-lanes-dialog>
 
 
-<p-dialog header="Process Reports" [modal]="true" [(visible)]="processReportsDialogVisible" [style]="{ width: '30rem' }">
-	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
-		<span class="p-text-secondary block mb-4 text-center">Process Reports</span>
-        <div>Uploaded Pdfs: {{fileNamesSavedInServer().length}}</div>
-        <div>Parsed rreports: {{assignmentsHolder.getReports().length}}</div>
-        <div>To parse: {{fileNamesSavedInServer().length - assignmentsHolder.getReports().length}}</div>
-		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
-			<p-button label="Cancel" severity="secondary" (click)="processReportsDialogVisible = false" />
-			<p-button label="Request Processing" (click)="processReportsDialogVisible = false; parseRemainingFilesToCsv()" />
-		</div>
-	</div>
-</p-dialog>
+<app-add-filters-dialog
+    [(visible)]="newFilterDialogVisible"
+    [report$]="selectedReport()"
+    (appliedFilter)="reportDragDropLane.reloadDragDropMenu()"
+></app-add-filters-dialog>
 
-<p-dialog header="Parsing Reports" [modal]="true" [(visible)]="parsingStatus$().isLoading" [style]="{ width: '30rem' }">
-	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
-		<span class="p-text-secondary block mb-4 text-center">Progress:</span>
-		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
-			{{parsingStatus$().parsed}}/{{parsingStatus$().toParse}}
-		</div>
-	</div>
-</p-dialog>
-
-<p-dialog header="Add Lane" [modal]="true" [(visible)]="newLaneDialogVisible" [style]="{ width: '30rem' }">
-	<div class="p-fluid" style="display: flex; flex-direction: column; justify-content: center; align-items:baseline; gap: 1rem;">
-		<span class="p-text-secondary block mb-4 text-center">Create a new lane and confirm your changes</span>
-		<p-floatlabel variant="on" style="width: 100%; max-width: 400px;">
-			<input pInputText [(ngModel)]="newLaneName" id="lanename" class="w-full" autocomplete="off" style="width: 100%;" />
-			<label for="lanename" class="text-sm text-gray-500 block">Lane Name</label>
-		</p-floatlabel>
-		<p-floatlabel variant="on" style="width: 100%; max-width: 400px;">
-			<textarea pInputTextarea [(ngModel)]="newLaneDescription" id="description" class="w-full" rows="3" autocomplete="off" style="width: 100%;" ></textarea>
-			<label for="description" class="text-sm text-gray-500 block">Description</label>
-		</p-floatlabel>
-		<div class="flex justify-end gap-2" style="width: 100%; max-width: 400px;">
-			<p-button label="Cancel" severity="secondary" (click)="newLaneDialogVisible = false" />
-			<p-button label="Save" (click)="newLaneDialogVisible = false; onClickAddLane(newLaneName, newLaneDescription)" />
-		</div>
-	</div>
-</p-dialog>
-
-
-<p-dialog 
-    header="Manage Filters" 
-    [modal]="true" 
-    [(visible)]="newFilterDialogVisible" 
-    [style]="{ width: '50rem', height: '80vh', display: 'flex', flexDirection: 'column' }">
-
-    <!-- Top Controls -->
-    <div class="flex justify-between p-3">
-        <p-button 
-            label="Add Filter" 
-            icon="pi pi-plus" 
-            severity="secondary"
-            (click)="newFilter()">
-        </p-button>
-        <button 
-            pButton 
-            icon="pi pi-play" 
-            class="p-button-sm p-button-text"
-            label="Apply all"
-            (click)="applyAllFilters()">
-        </button>
-    </div>
-
-    <!-- Scrollable Rows -->
-    <div class="filter-rows" style="flex: 1 1 auto; overflow-y: auto; padding: 0.5rem 1rem; display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 0.75rem; align-items: center;">
-        @for(filter of filterHolder.filters$(); track filter; let i = $index){
-            <!-- Subject Input -->
-            <p-floatlabel variant="on" style="width: 100%;">
-                <input 
-                    pInputText 
-                    [(ngModel)]="filter.subject_substring" 
-                    id="subject-{{ i }}" 
-                    autocomplete="off" 
-                    style="width: 100%;"
-                />
-                <label for="subject-{{ i }}" class="text-sm text-gray-500">
-                    Subject contains
-                </label>
-            </p-floatlabel>
-
-            <!-- Category Select -->
-            <p-select
-                [(ngModel)]="filter.lane_id"
-                [options]="categoryOptions"
-                optionLabel="name"
-                optionValue="id"
-                placeholder="Move to Lane"
-                style="width: 100%;"
-                appendTo="body"
-            ></p-select>
-
-            <!-- Play Button -->
-            <button 
-                pButton 
-                icon="pi pi-play" 
-                class="p-button-sm p-button-text"
-                (click)="applyFilter(i)">
-            </button>
-
-            <!-- Delete Button -->
-            <button 
-                pButton 
-                icon="pi pi-trash" 
-                class="p-button-sm p-button-danger p-button-text"
-                (click)="filterHolder.removeFilter(i)">
-            </button>
-        }
-    </div>
-
-    <!-- Sticky Footer -->
-    <div class="p-dialog-footer flex justify-end gap-2" style="flex-shrink: 0; padding: 1rem;">
-        <p-button 
-            label="Cancel"
-            severity="secondary" 
-            (click)="newFilterDialogVisible = false">
-        </p-button>
-        <p-button 
-            label="Save"
-            (click)="filterHolder.save(); newFilterDialogVisible = false">
-        </p-button>
-    </div>
-
-</p-dialog>

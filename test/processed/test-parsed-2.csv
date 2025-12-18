@@ -1,0 +1,53 @@
+# month: 11
+# year: 2024
+id,date,kind,amount,subject,creditor_id
+0,01.10.2024,debit,"-820,00",Rent,Wohnbau West AG
+1,01.10.2024,debit,"-98,30",Groceries,Kaufland
+2,02.10.2024,debit,"-52,10",Fuel,Aral
+3,02.10.2024,credit,"2750,00",Salary,Innotech Solutions
+4,03.10.2024,debit,"-12,99",Streaming Subscription,Disney Plus
+5,03.10.2024,debit,"-41,20",Restaurant,Five Guys
+6,04.10.2024,debit,"-6,40",Bakery,Malzers
+7,04.10.2024,debit,"-72,85",Drugstore,Rossmann
+8,05.10.2024,debit,"-189,00",Utilities,RWE
+9,05.10.2024,debit,"-19,95",Mobile Data,Otelo
+10,06.10.2024,debit,"-143,70",Online Shopping,Zalando
+11,06.10.2024,debit,"-4,99",Cloud Storage,iCloud
+12,07.10.2024,debit,"-16,50",Lunch,Mensa TU
+13,07.10.2024,debit,"-49,99",Internet Provider,1&1
+14,08.10.2024,debit,"-9,80",Public Transport,VRR
+15,08.10.2024,debit,"-64,90",Shoes,Deichmann
+16,09.10.2024,debit,"-21,40",Lunch,Peter Pane
+17,09.10.2024,debit,"-58,75",Groceries,Marktkauf
+18,10.10.2024,debit,"-11,99",Music Subscription,Apple Music
+19,10.10.2024,debit,"-145,00",Health Insurance,Techniker Krankenkasse
+20,11.10.2024,debit,"-26,90",Rideshare,Uber
+21,11.10.2024,debit,"-249,00",Monitor,Saturn
+22,12.10.2024,debit,"-7,60",Snacks,REWE To Go
+23,12.10.2024,debit,"-22,00",Books,Mayersche
+24,13.10.2024,debit,"-5,90",Coffee,Tchibo
+25,13.10.2024,debit,"-69,30",Groceries,Real
+26,14.10.2024,debit,"-89,00",Household Tools,Bauhaus
+27,14.10.2024,debit,"-2,99",App Subscription,Microsoft
+28,15.10.2024,debit,"-37,80",Dinner,Hans im Glück
+29,15.10.2024,debit,"-61,40",Heating,Stadtwerke Bochum
+30,16.10.2024,debit,"-15,00",Donation,UNICEF
+31,16.10.2024,debit,"-34,20",Stationery,Office Centre
+32,17.10.2024,debit,"-10,50",Breakfast,Ditsch
+33,17.10.2024,debit,"-59,90",Sports Club,FitX
+34,18.10.2024,debit,"-27,99",Software License,JetBrains
+35,18.10.2024,debit,"-24,10",Groceries,Penny
+36,19.10.2024,debit,"-6,00",Parking,APCOA
+37,19.10.2024,debit,"-44,60",Restaurant,Alex
+38,20.10.2024,debit,"-79,90",Train Ticket,FlixTrain
+39,20.10.2024,debit,"-13,20",Lunch,Frittenwerk
+40,21.10.2024,debit,"-128,00",Electricity,Vattenfall
+41,21.10.2024,debit,"-29,00",Online Learning,Coursera
+42,22.10.2024,debit,"-8,50",Cinema,FilmPalast
+43,22.10.2024,debit,"-71,80",Groceries,Globus
+44,23.10.2024,debit,"-11,99",Web Hosting,Strato
+45,23.10.2024,debit,"-35,40",Restaurant,KFC
+46,24.10.2024,debit,"-22,00",Haircut,Barbershop West
+47,24.10.2024,debit,"-46,70",Household Supplies,Action
+48,25.10.2024,debit,"-6,99",Password Manager,1Password
+49,25.10.2024,debit,"-33,15",Groceries,Norma

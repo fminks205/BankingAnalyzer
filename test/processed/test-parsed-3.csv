@@ -1,0 +1,53 @@
+# month: 12
+# year: 2024
+id,date,kind,amount,subject,creditor_id
+0,01.10.2024,debit,"-900,00",Rent,Immobilien Service NRW
+1,01.10.2024,debit,"-134,60",Groceries,EDEKA Center
+2,02.10.2024,debit,"-47,20",Fuel,Total Energies
+3,02.10.2024,credit,"3100,00",Salary,TechWorks GmbH
+4,03.10.2024,debit,"-14,99",Streaming Subscription,Amazon Prime
+5,03.10.2024,debit,"-29,70",Restaurant,Burger King
+6,04.10.2024,debit,"-8,20",Bakery,BackWerk
+7,04.10.2024,debit,"-63,40",Drugstore,Müller
+8,05.10.2024,debit,"-225,00",Utilities,E.ON
+9,05.10.2024,debit,"-39,99",Mobile Phone,O2
+10,06.10.2024,debit,"-56,80",Online Shopping,eBay
+11,06.10.2024,debit,"-7,99",Cloud Storage,Mega
+12,07.10.2024,debit,"-18,90",Lunch,Dean & David
+13,07.10.2024,debit,"-59,95",Internet Provider,PYUR
+14,08.10.2024,debit,"-11,00",Public Transport,DB Regio
+15,08.10.2024,debit,"-112,00",Jacket,C&A
+16,09.10.2024,debit,"-23,40",Lunch,Maredo
+17,09.10.2024,debit,"-61,10",Groceries,Hit Markt
+18,10.10.2024,debit,"-10,99",Music Subscription,Deezer
+19,10.10.2024,debit,"-132,00",Liability Insurance,HUK-Coburg
+20,11.10.2024,debit,"-18,70",Taxi,Taxi Dortmund
+21,11.10.2024,debit,"-179,00",Office Chair,XXXLutz
+22,12.10.2024,debit,"-9,30",Snacks,Netto City
+23,12.10.2024,debit,"-24,50",Books,Osiander
+24,13.10.2024,debit,"-6,20",Coffee,Espresso House
+25,13.10.2024,debit,"-83,90",Groceries,Combi
+26,14.10.2024,debit,"-149,00",Kitchen Appliance,MediaMarkt
+27,14.10.2024,debit,"-3,49",App Purchase,Google Play
+28,15.10.2024,debit,"-46,20",Dinner,The Ash
+29,15.10.2024,debit,"-71,00",Gas Supply,DEW21
+30,16.10.2024,debit,"-20,00",Donation,Ärzte ohne Grenzen
+31,16.10.2024,debit,"-38,60",Office Supplies,Schäfer Shop
+32,17.10.2024,debit,"-12,30",Breakfast,Crobag
+33,17.10.2024,debit,"-44,90",Yoga Course,Urban Sports Club
+34,18.10.2024,debit,"-59,99",Software License,Adobe
+35,18.10.2024,debit,"-28,40",Groceries,Aldi Süd
+36,19.10.2024,debit,"-7,00",Parking,Q-Park
+37,19.10.2024,debit,"-53,10",Restaurant,Enchilada
+38,20.10.2024,debit,"-119,00",Train Ticket,ICE Deutsche Bahn
+39,20.10.2024,debit,"-15,80",Lunch,Asia Wok
+40,21.10.2024,debit,"-142,00",Electricity,LEW Energie
+41,21.10.2024,debit,"-17,99",Online Course,LinkedIn Learning
+42,22.10.2024,debit,"-10,00",Cinema,Astor Kino
+43,22.10.2024,debit,"-76,40",Groceries,Metro
+44,23.10.2024,debit,"-9,99",Web Tools,Canva
+45,23.10.2024,debit,"-33,90",Restaurant,Domino’s
+46,24.10.2024,debit,"-19,50",Haircut,Klier
+47,24.10.2024,debit,"-57,30",Household Supplies,Toom
+48,25.10.2024,debit,"-5,99",VPN Service,NordVPN
+49,25.10.2024,debit,"-36,70",Groceries,Bioladen

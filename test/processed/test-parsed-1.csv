@@ -1,0 +1,53 @@
+# month: 10
+# year: 2024
+id,date,kind,amount,subject,creditor_id
+0,01.10.2024,debit,"-850,00",Rent,City Apartments GmbH
+1,01.10.2024,debit,"-120,45",Groceries,REWE
+2,02.10.2024,debit,"-45,99",Fuel,Shell
+3,02.10.2024,credit,"2500,00",Salary,ACME Corp
+4,03.10.2024,debit,"-9,99",Streaming Subscription,Netflix
+5,03.10.2024,debit,"-32,50",Restaurant,Vapiano
+6,04.10.2024,debit,"-15,00",Coffee,Coffee Fellows
+7,04.10.2024,debit,"-68,30",Pharmacy,DM Drogerie Markt
+8,05.10.2024,debit,"-210,00",Utilities,Stadtwerke Dortmund
+9,05.10.2024,debit,"-24,99",Mobile Phone Plan,Telekom
+10,06.10.2024,debit,"-89,90",Online Shopping,Amazon
+11,06.10.2024,debit,"-19,99",Cloud Storage,Google
+12,07.10.2024,debit,"-12,80",Bakery,Kamps
+13,07.10.2024,debit,"-55,00",Internet Provider,Vodafone
+14,08.10.2024,debit,"-7,50",Public Transport,DSW21
+15,08.10.2024,debit,"-39,95",Clothing,H&M
+16,09.10.2024,debit,"-18,60",Lunch,Nordsee
+17,09.10.2024,debit,"-64,20",Groceries,EDEKA
+18,10.10.2024,debit,"-14,99",Music Subscription,Spotify
+19,10.10.2024,debit,"-120,00",Insurance,Allianz
+20,11.10.2024,debit,"-22,40",Taxi,Free Now
+21,11.10.2024,debit,"-95,00",Electronics,MediaMarkt
+22,12.10.2024,debit,"-11,20",Snacks,Aldi
+23,12.10.2024,debit,"-29,90",Books,Thalia
+24,13.10.2024,debit,"-6,80",Coffee,Starbucks
+25,13.10.2024,debit,"-74,60",Groceries,Lidl
+26,14.10.2024,debit,"-199,00",Furniture,IKEA
+27,14.10.2024,debit,"-13,99",App Purchase,Apple
+28,15.10.2024,debit,"-42,30",Restaurant,Block House
+29,15.10.2024,debit,"-58,00",Gas Bill,Stadtwerke Dortmund
+30,16.10.2024,debit,"-10,00",Donation,Red Cross
+31,16.10.2024,debit,"-27,45",Office Supplies,Staples
+32,17.10.2024,debit,"-8,90",Breakfast,BackWerk
+33,17.10.2024,debit,"-65,00",Gym Membership,McFit
+34,18.10.2024,debit,"-34,99",Video Game,Steam
+35,18.10.2024,debit,"-21,70",Groceries,Netto
+36,19.10.2024,debit,"-5,50",Parking,Parkhaus City
+37,19.10.2024,debit,"-47,80",Restaurant,L'Osteria
+38,20.10.2024,debit,"-99,00",Train Ticket,Deutsche Bahn
+39,20.10.2024,debit,"-16,40",Lunch,Dean & David
+40,21.10.2024,debit,"-135,00",Electricity,EnBW
+41,21.10.2024,debit,"-23,90",Online Course,Udemy
+42,22.10.2024,debit,"-9,50",Cinema,CineStar
+43,22.10.2024,debit,"-67,25",Groceries,Kaufland
+44,23.10.2024,debit,"-14,95",Domain Hosting,IONOS
+45,23.10.2024,debit,"-31,60",Restaurant,Subway
+46,24.10.2024,debit,"-18,00",Haircut,Hair Express
+47,24.10.2024,debit,"-52,40",Household Supplies,Rossmann
+48,25.10.2024,debit,"-4,99",Cloud Backup,Dropbox
+49,25.10.2024,debit,"-28,75",Groceries,Penny

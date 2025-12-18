@@ -7,12 +7,6 @@ from fastapi.staticfiles import StaticFiles
 
 from api.api import API
 
-root_dir = "/app" 
-for dirpath, dirnames, filenames in os.walk(root_dir):
-    print(f"DIR: {dirpath}")
-    for name in filenames:
-        print(f"  FILE: {name}")
-
 api = API()
 app = api.app
 

@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, effect, Input, OnInit, QueryList, signal, untracked, ViewChildren, WritableSignal } from '@angular/core';
+import { Component, effect, input, Input, OnInit, QueryList, signal, untracked, ViewChildren, WritableSignal } from '@angular/core';
 import { Report } from '../../client/openapi/model/report';
 import { Entry } from '../../client/openapi/model/entry';
 import { Lane, LaneEntryAssignment } from '../../client/openapi';
@@ -23,9 +23,7 @@ export interface DragDropLane{
 	styleUrl: './transaction-category-drag-drop.scss'
 })
 export class TransactionCategoryDragDrop implements OnInit{
-
-	@Input()
-	report!: Report
+	report = input<Report | undefined>()
 
 	@ViewChildren(CdkDropList)
 	dropLists!: QueryList<CdkDropList>
@@ -35,7 +33,7 @@ export class TransactionCategoryDragDrop implements OnInit{
 	readonly unassignedLane: Lane = {
 		description: "",
 		id: -1,
-		name: "Nicht zugewiesen"
+		name: "Not assigned"
 	}
 
 	dragDropLanes$: WritableSignal<DragDropLane[]> = signal([])
@@ -43,32 +41,39 @@ export class TransactionCategoryDragDrop implements OnInit{
 	constructor(
 		public txLaneAssignmentsHolder: TxLaneAssignmentHolder,
 	){
+		effect(()=>{
+			let lanes = this.txLaneAssignmentsHolder.lanes$()
+			console.log("DragDrop loads new lanes as reaction to changed state")
+			this.reloadDragDropMenu()
+		})
 	}
 
 	ngOnInit(): void {
-		this.loadReportLanes()
+		this.reloadDragDropMenu()
 	}
 
 	onClickRemoveLane(laneToDelete: DragDropLane) {
 		this.txLaneAssignmentsHolder.deleteLane(laneToDelete.lane.id)
-		this.loadReportLanes()
+		this.reloadDragDropMenu()
 	}
 
-	loadReportLanes(report?: Report){
-		if(report != undefined){
-			this.report = report
+	reloadDragDropMenu(){
+		let report = this.report()
+		if(report == undefined){
+			console.warn("Tried to load lanes for an undefined report")
+			return
 		}
-		console.log(`Recalculating view for report ${this.report.month}/${this.report.year}`)
-		this.allEntries = [...this.report.entries]
-		let lanesInView = [this.unassignedLane].concat(this.txLaneAssignmentsHolder.getLanes())
+		console.log(`Recalculating view for report ${report.month}/${report.year}`)
+		this.allEntries = [...report.entries]
+		let lanesInView = [this.unassignedLane].concat(this.txLaneAssignmentsHolder.lanes$())
 		let assignments = this.txLaneAssignmentsHolder.getAllAssignmentsAsArray()
 			.filter(assignment => {
-				return assignment.year == this.report.year
-					&& assignment.month == this.report.month
+				return assignment.year == report.year
+					&& assignment.month == report.month
 			})
 
 		this.fromEntitiesSetViewState(
-			this.report.entries,
+			report.entries,
 			lanesInView,
 			assignments
 		)
@@ -109,6 +114,7 @@ export class TransactionCategoryDragDrop implements OnInit{
 
 	drop(event: CdkDragDrop<Entry[]>, ddLane: DragDropLane | undefined) {
 		console.debug(`DropEvent: ${event.previousContainer.id} -> ${ddLane?.lane.name ?? "no id"}`)
+		let report = this.report()
 		if (event.previousContainer === event.container) {
 			console.debug(`Moving objec around inside container`)
 			moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -117,17 +123,17 @@ export class TransactionCategoryDragDrop implements OnInit{
 				console.error(`DragDrop event data invalid, cannot set new assignment: ${event.item.data}`)
 				return
 			}
-			if (this.report == undefined
-				|| this.report.month == undefined
-				|| this.report.year == undefined
+			if (report == undefined
+				|| report.month == undefined
+				|| report.year == undefined
 			) {
 				console.error(`Report invalid, cannot set new assignment: ${this.report}`)
 				return
 			}
 
 			const key: TxLaneAssignmentKey = {
-				year: this.report.year,
-				month: this.report.month,
+				year: report.year,
+				month: report.month,
 				entryId: (event.item.data as Entry).id
 			}
 			if(ddLane == undefined || ddLane.lane.id == this.unassignedLane.id){

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TxLaneAssignmentHolder } from './tx-lane-assignment-holder';
+import { BoardStateHolder } from './tx-lane-assignment-holder';
 
 describe('TxLaneAssignmentHolder', () => {
-  let service: TxLaneAssignmentHolder;
+  let service: BoardStateHolder;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TxLaneAssignmentHolder);
+    service = TestBed.inject(BoardStateHolder);
   });
 
   it('should be created', () => {

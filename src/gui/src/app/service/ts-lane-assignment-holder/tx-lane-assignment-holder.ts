@@ -1,6 +1,6 @@
 import { Injectable, OnInit, signal, WritableSignal, WritableSignal as WritableSignal$ } from '@angular/core';
-import { DefaultService, Lane, Report, LaneEntryAssignment } from '../../client/openapi';
-import { AssignmentKeyManager } from '../filter-holder/assignment-key-manager';
+import { DefaultService, Lane, Report, LaneEntryAssignment, Filter } from '../../client/openapi';
+import { AssignmentKeyManager } from './assignment-key-manager';
 import { tap } from 'rxjs';
 
 /**
@@ -15,10 +15,10 @@ export interface TxLaneAssignmentKey{
 @Injectable({
 	providedIn: 'root'
 })
-export class TxLaneAssignmentHolder{
+export class BoardStateHolder{
 
 	pdfsInServer$: WritableSignal<string[]> = signal([])
-
+	filters$: WritableSignal<Filter[]> = signal([])
 	reports$: WritableSignal<Report[]> = signal([])
 	lanes$: WritableSignal<Lane[]> = signal([])
 	laneAssignments$: WritableSignal$<Map<string, number>> = signal(new Map());
@@ -147,6 +147,79 @@ export class TxLaneAssignmentHolder{
 			)
 	}
 
+	applyAllFiltersToAll() {
+		let reports = this.reports$()
+		let filters = this.filters$()
+		for(let filter of filters){
+			for(let report of reports){
+				this.applyFilter(filter, report)
+			}	
+		}
+	}
+
+	applyAllFiltersToReport(report: Report) {
+		let filters = this.filters$()
+		for(let filter of filters){
+			this.applyFilter(filter, report)
+		}
+	}
+
+	applyFilter(filter: Filter, report: Report) {
+		console.log(`Filter ${filter.subject_substring} to report ${report.month}/${report.year}`)
+		if (report == undefined || report.year == null || report.month == null){
+			console.error(`Cannot apply filter because seleted report is undefined`)
+			return
+		}
+
+		for (let entry of report.entries){
+			if(entry.subject == null) continue;
+			if(entry.subject.match(filter.subject_substring) != null){
+				let newKey: TxLaneAssignmentKey = {
+						year: report.year,
+						month: report.month,
+						entryId: entry.id
+				}
+				console.log(`Setting assignment ${newKey.month}/${newKey.year}:${newKey.entryId} to lane ${filter.lane_id}`)
+				this.setAssignment(
+					newKey,
+					filter.lane_id
+				)
+			}
+		}
+	}
+
+	addFilter(filter: Filter){
+		this.filters$.set([filter, ...this.filters$()])
+		console.debug(`Added filter, new amount: ${this.filters$().length}`)
+	}
+
+	removeFilter(i: number){
+		this.filters$.set([
+			...this.filters$().slice(0, i),
+			...this.filters$().slice(i + 1),
+		])
+	}
+
+	loadFiltersFromServer(){
+    	console.debug(`Requesting filters from server`)
+		this.client.getFilter()
+			.subscribe({
+				next: (response)=>{
+					console.debug(`Received ${response.length} reports from server`)
+					this.filters$.set(response)
+				}
+			})
+ 	 }
+
+  	saveFilters(){
+		this.client.postFilter(this.filters$())
+				.subscribe({
+					next: (response)=>{
+						console.debug(`Received ${response.length} filters from server as a POST response`)
+						this.filters$.set(response)
+					}
+				})
+  	}
 
 	private compareReportsByYearMonth(a: Report, b: Report){
 		if (a.year == null || b.year == null || a.month == null || b.month == null){

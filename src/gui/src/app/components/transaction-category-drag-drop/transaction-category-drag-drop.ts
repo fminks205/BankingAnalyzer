@@ -4,7 +4,7 @@ import { Report } from '../../client/openapi/model/report';
 import { Entry } from '../../client/openapi/model/entry';
 import { Lane, LaneEntryAssignment } from '../../client/openapi';
 import { ButtonDirective } from "primeng/button";
-import { TxLaneAssignmentHolder, TxLaneAssignmentKey } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { BoardStateHolder, TxLaneAssignmentKey } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 
 export interface DragDropLane{
 	lane: Lane,
@@ -39,11 +39,11 @@ export class TransactionCategoryDragDrop implements OnInit{
 	dragDropLanes$: WritableSignal<DragDropLane[]> = signal([])
 
 	constructor(
-		public txLaneAssignmentsHolder: TxLaneAssignmentHolder,
+		public boardState: BoardStateHolder,
 	){
 		effect(()=>{
-			let lanes = this.txLaneAssignmentsHolder.lanes$()
-			console.log("DragDrop loads new lanes as reaction to changed state")
+			// DragDrop loads new lanes as reaction to changed state
+			let lanes = this.boardState.lanes$()
 			this.reloadDragDropMenu()
 		})
 	}
@@ -53,7 +53,7 @@ export class TransactionCategoryDragDrop implements OnInit{
 	}
 
 	onClickRemoveLane(laneToDelete: DragDropLane) {
-		this.txLaneAssignmentsHolder.deleteLane(laneToDelete.lane.id)
+		this.boardState.deleteLane(laneToDelete.lane.id)
 		this.reloadDragDropMenu()
 	}
 
@@ -65,8 +65,8 @@ export class TransactionCategoryDragDrop implements OnInit{
 		}
 		console.log(`Recalculating view for report ${report.month}/${report.year}`)
 		this.allEntries = [...report.entries]
-		let lanesInView = [this.unassignedLane].concat(this.txLaneAssignmentsHolder.lanes$())
-		let assignments = this.txLaneAssignmentsHolder.getAllAssignmentsAsArray()
+		let lanesInView = [this.unassignedLane].concat(this.boardState.lanes$())
+		let assignments = this.boardState.getAllAssignmentsAsArray()
 			.filter(assignment => {
 				return assignment.year == report.year
 					&& assignment.month == report.month
@@ -138,10 +138,10 @@ export class TransactionCategoryDragDrop implements OnInit{
 			}
 			if(ddLane == undefined || ddLane.lane.id == this.unassignedLane.id){
 				console.debug(`Deleting assignment: ${key.entryId}-${key.year}-${key.month}`)
-				this.txLaneAssignmentsHolder.deleteAssignment(key)
+				this.boardState.deleteAssignment(key)
 			} else {
 				console.debug(`Setting assignment: ${key.entryId}-${key.year}-${key.month}:${ddLane.lane.id}`)
-				this.txLaneAssignmentsHolder.setAssignment(
+				this.boardState.setAssignment(
 					key, 
 					ddLane.lane.id
 				)

@@ -1,6 +1,6 @@
 import { Component, effect, model, signal, WritableSignal } from '@angular/core';
 import { Dialog } from "primeng/dialog";
-import { TxLaneAssignmentHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { BoardStateHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 import { ButtonModule } from 'primeng/button';
 
 interface ParsingStatus{
@@ -26,7 +26,7 @@ export class ParseReportsDialog {
 	})
 
 	constructor(
-		public assignmentsHolder: TxLaneAssignmentHolder
+		public boardState: BoardStateHolder
 	){
 		this.wireParsingStatus()
 		this.wireStartOnOpening()
@@ -38,7 +38,7 @@ export class ParseReportsDialog {
 			let status = this.parsingStatus$()
 			if (visible == false) return
 			if (status.isLoading == true) return
-			this.assignmentsHolder
+			this.boardState
 				.loadReportsFromServer()
 				.subscribe(()=>{
 					this.parseRemainingFilesToCsv()
@@ -51,7 +51,7 @@ export class ParseReportsDialog {
 		this.parsingStatus$.set({
 			isLoading: true,
 			parsed: 0,
-			toParse: this.assignmentsHolder.pdfsInServer$().length - this.assignmentsHolder.reports$().length
+			toParse: this.boardState.pdfsInServer$().length - this.boardState.reports$().length
 		})
 	}
 
@@ -67,11 +67,11 @@ export class ParseReportsDialog {
 				})
 				return
 			}
-			this.assignmentsHolder.requestToParseNextReport()
+			this.boardState.requestToParseNextReport()
 				.subscribe({
 					next:()=>{
 						console.info("Sucessfully parsed report to csv")
-						this.assignmentsHolder.loadReportsFromServer()
+						this.boardState.loadReportsFromServer()
 							.subscribe({
 								next: ()=>{
 									let oldStatus = this.parsingStatus$()

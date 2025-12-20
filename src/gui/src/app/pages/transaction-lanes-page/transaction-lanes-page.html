@@ -1,8 +1,8 @@
 <app-main-workflow-toolbar
-    (onUploadReportsClick)="uploadReportsDialogVisible.set(true)"
-    (onProcessReportsClick)="processReportsDialogVisible.set(true)"
-    (onAddLaneClick)="newLaneDialogVisible.set(true)"
-    (onFiltersClick)="newFilterDialogVisible.set(true)"
+    (onUploadReportsClick)="state.uploadReportsDialogVisible.set(true)"
+    (onProcessReportsClick)="state.processReportsDialogVisible.set(true)"
+    (onAddLaneClick)="state.newLaneDialogVisible.set(true)"
+    (onFiltersClick)="state.newFilterDialogVisible.set(true)"
 
     (onSaveAssignmentsClick)="assignmentsHolder.saveState()"
     (onCreateDashboardClick)="dashboardCreator.createDashboard()"
@@ -14,7 +14,7 @@
 	@for(report of assignmentsHolder.reports$(); track report){
 		<p-button
 			[label]="report.month + ' ' + report.year"
-			[severity]="report === selectedReport() ? 'primary' : 'secondary'"
+			[severity]="report === state.selectedReport$() ? 'primary' : 'secondary'"
 			size="small"
 			(onClick)="setSelectedReport(report)">
 		</p-button>
@@ -23,26 +23,24 @@
 
 
 <app-transaction-category-drag-drop
-	[hidden]="selectedReport == undefined"
-	[report]="selectedReport()"
+	[hidden]="state.selectedReport$() == undefined"
+	[report]="state.selectedReport$()"
 ></app-transaction-category-drag-drop>
 
 <app-upload-bankstatement-dialog
-    [(visible)]="uploadReportsDialogVisible"
+    [(visible)]="state.uploadReportsDialogVisible"
 ></app-upload-bankstatement-dialog>
 
 <app-parse-reports-dialog
-    [(visible)]="processReportsDialogVisible"
+    [(visible)]="state.processReportsDialogVisible"
 ></app-parse-reports-dialog>
 
 <app-add-lanes-dialog
-    [(visible)]="newLaneDialogVisible"
+    [(visible)]="state.newLaneDialogVisible"
 ></app-add-lanes-dialog>
 
-
 <app-add-filters-dialog
-    [(visible)]="newFilterDialogVisible"
-    [report$]="selectedReport()"
+    [(visible)]="state.newFilterDialogVisible"
     (appliedFilter)="reportDragDropLane.reloadDragDropMenu()"
 ></app-add-filters-dialog>
 

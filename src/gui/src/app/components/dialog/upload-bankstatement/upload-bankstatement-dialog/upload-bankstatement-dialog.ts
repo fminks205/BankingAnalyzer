@@ -3,7 +3,7 @@ import { Dialog } from "primeng/dialog";
 import { FileUpload } from "primeng/fileupload";
 import { ButtonModule } from "primeng/button";
 import { DecimalPipe } from '@angular/common';
-import { TxLaneAssignmentHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { BoardStateHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 
 @Component({
   selector: 'app-upload-bankstatement-dialog',
@@ -23,7 +23,7 @@ export class UploadBankstatementDialog implements OnInit{
 	visibleNeverUndefined: boolean = false
 
 	constructor(
-		private assignmentsHolder: TxLaneAssignmentHolder
+		private boardState: BoardStateHolder
 	){
 		effect(()=>{
 			let visibleInput = this.visible()
@@ -38,7 +38,7 @@ export class UploadBankstatementDialog implements OnInit{
   	onPdfUpload(event: any) {
 		const files: File[] = event.files;
 
-		this.assignmentsHolder.uploadFiles(files)
+		this.boardState.uploadFiles(files)
 			.subscribe({
 				next: ()=>{
 					this.pdfUpload.clear()
@@ -49,7 +49,7 @@ export class UploadBankstatementDialog implements OnInit{
 	}
 
 	loadFilesNamesSavedInServer(){
-		this.assignmentsHolder.loadSavedBankStatements()
+		this.boardState.loadSavedBankStatements()
 			.subscribe({
 				next: (res: string[])=>{
 					console.debug(`Received ${res.length} file names from server`)

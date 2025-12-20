@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TxLaneAssignmentKey } from '../ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { TxLaneAssignmentKey } from './tx-lane-assignment-holder';
 
 @Injectable({
   providedIn: 'root'

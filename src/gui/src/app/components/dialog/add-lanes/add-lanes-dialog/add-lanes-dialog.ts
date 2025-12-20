@@ -4,7 +4,7 @@ import { FloatLabel } from "primeng/floatlabel";
 import { ButtonModule } from "primeng/button";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TxLaneAssignmentHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { BoardStateHolder } from '../../../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
@@ -28,12 +28,12 @@ export class AddLanesDialog {
 	newLaneDescription = ""
 
 	constructor(
-		public assignmentsHolder: TxLaneAssignmentHolder
+		public boadState: BoardStateHolder
 	){
 
 	}
 
 	onClickAddLane(name: string, description: string){
-		this.assignmentsHolder.addLane(name, description)
+		this.boadState.addLane(name, description)
 	}
 }

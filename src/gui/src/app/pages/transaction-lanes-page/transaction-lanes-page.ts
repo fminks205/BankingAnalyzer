@@ -1,11 +1,10 @@
-import { Component, effect, OnInit, signal, ViewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TransactionCategoryDragDrop } from "../../components/transaction-category-drag-drop/transaction-category-drag-drop";
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { TxLaneAssignmentHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
+import { BoardStateHolder } from '../../service/ts-lane-assignment-holder/tx-lane-assignment-holder';
 import { Report } from '../../client/openapi';
 import { DashboardCreator } from '../../service/dashboard/dashboard-creator';
-import { FilterHolder } from '../../service/filter-holder/filter-holder';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { MainWorkflowToolbar } from "../../components/main-workflow-toolbar/main-workflow-toolbar/main-workflow-toolbar";
@@ -13,6 +12,7 @@ import { UploadBankstatementDialog } from '../../components/dialog/upload-bankst
 import { ParseReportsDialog } from "../../components/dialog/parse-reports/parse-reports-dialog/parse-reports-dialog";
 import { AddLanesDialog } from "../../components/dialog/add-lanes/add-lanes-dialog/add-lanes-dialog";
 import { AddFiltersDialog } from "../../components/dialog/add-filters/add-filters-dialog/add-filters-dialog";
+import { TransactionLanesPageState } from './transaction-lanes-page-state';
 
 
 
@@ -39,27 +39,20 @@ export class TransactionLanesPage implements OnInit{
 	@ViewChild(TransactionCategoryDragDrop)
 	reportDragDropLane!: TransactionCategoryDragDrop
 
-	uploadReportsDialogVisible: WritableSignal<boolean> = signal(false)
-	processReportsDialogVisible: WritableSignal<boolean> = signal(false)
-	newFilterDialogVisible: WritableSignal<boolean> = signal(false)
-	newLaneDialogVisible: WritableSignal<boolean> = signal(false)
-
-	selectedReport: WritableSignal<Report | undefined> = signal(undefined)
-
 	constructor(
-		public assignmentsHolder: TxLaneAssignmentHolder,
+		public assignmentsHolder: BoardStateHolder,
 		public dashboardCreator: DashboardCreator,
-		public filterHolder: FilterHolder,
+		public state: TransactionLanesPageState
 	){
 	}
 
 	ngOnInit(): void {
 		this.assignmentsHolder.loadCompleteStateFromServer()
-		this.filterHolder.loadFromServer()
+		this.assignmentsHolder.loadFiltersFromServer()
 	}
 
 	setSelectedReport(report: Report){
-		this.selectedReport.set(report)
+		this.state.selectedReport$.set(report)
 		this.reportDragDropLane.reloadDragDropMenu()
 	}
 }

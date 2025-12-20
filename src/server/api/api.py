@@ -7,7 +7,7 @@ from typing import List
 
 from core.Persistence import Persistence
 from core.workflow import Workflow
-from core.dashboardCreator import DashboardCreator
+from core.dashboard.dashboardCreator import DashboardCreator
 from domain.Filter import Filter
 from domain.Lane import Lane
 from domain.LaneEntryAssignment import LaneEntryAssignment
@@ -82,7 +82,7 @@ class API:
 		
 		@app.get("/dashboard", response_class=HTMLResponse, operation_id="get_dashboard")
 		def dashboard():
-			html_str = self.dashboard_creator.create_dashboard(
+			html_str = self.dashboard_creator.generate_dashboard_html(
 				self.persistence.read_lane_entry_assignments(),
 				self.persistence.read_lanes(),
 				self.persistence.get_reports()

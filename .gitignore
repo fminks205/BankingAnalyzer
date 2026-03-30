@@ -1,6 +1,8 @@
 # work in progress
 docs
+.env
 
+.idea
 
 node_modules/
 __pycache__/

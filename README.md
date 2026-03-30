@@ -49,7 +49,7 @@ cd ..\..
 
 Start the GUI:
 ```shell
-cd src\gui
+cd src\gui &
 npm run start
 ```
 
